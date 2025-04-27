@@ -1,0 +1,42 @@
+kind: Deployment
+replicaCount: 1
+name: sms-gettoken
+image:
+  repository: registry.ants.co.th/apps/sms/sms-gettoken
+  tag: dev-2d3c38ee7dabf7ef822132fa7a6afcfb221becf0
+  pullPolicy: IfNotPresent
+  commandEnabled: false
+# ===========================================================================
+service:
+  enabled: true
+  internalPort: 80
+  externalPort: 80
+appEnv: 
+  dbAccount: "Data Source=210.1.61.185,14430;Initial Catalog=ACCOUNT_KUBE;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'; TrustServerCertificate=True; Encrypt=False;"
+  redisConnectionString: "redis-gettoken-master.database.svc.cluster.local:6379"
+  AllowedHosts: "*"
+  Wheretype: "in"
+  Account_where: "1150,4236,417,4268,4309,4432"
+  Check_Account_Login: "0"
+  encrypt-key: "db3OIsj+BXE9NZDy0t8W3TcNekrF+2d/1sFnWG4HnV8TZY30iTOdtVWJG8abWvB1GlOgJuQZdcF2Luqm/hccMw=="
+  DOTNET_USE_POLLING_FILE_WATCHER: "1"
+  closeLog: "0"
+imagePullSecrets:
+  enabled: true
+  createSecret: 
+    registry: registry.ants.co.th
+    username: admin
+    password: K1f8kmqOB7xO64nv1VR6z9h3F
+# ===========================================================================
+resources: {}
+
+volumes:
+  enabled: true
+  volume:
+    - name: gettoken-logs
+      hostPath:
+        path: /mnt/data/logs/dev-devcenter-gettoken
+        type: DirectoryOrCreate
+  volumeMounts:
+    - name: gettoken-logs
+      mountPath: /app/logs/sms-gettoken-container

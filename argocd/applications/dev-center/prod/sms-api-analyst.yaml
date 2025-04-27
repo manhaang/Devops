@@ -1,0 +1,49 @@
+kind: Deployment
+replicaCount: 1
+name: sms-analyst
+image:
+  repository: registry.ants.co.th/apps/sms/sms-api-analyst
+  tag: prod-8658783d2d9e7ecd74e6de944749f2f721ad817e
+  pullPolicy: IfNotPresent
+  commandEnabled: false
+# ===========================================================================
+service:
+  enabled: true
+  internalPort: 80
+  externalPort: 80
+appEnv:
+  AllowedHosts: "*"
+  contentlength: "1600"
+  Account: "Data Source=103.212.181.33,14430;Initial Catalog=ANTSACCOUNT;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'; TrustServerCertificate=True;"
+  Blacklist: "Data Source=103.212.181.40,14430;Initial Catalog=BLACKLIST;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'; TrustServerCertificate=True;"
+
+  ants1: "Data Source=115.31.154.120,14430;Initial Catalog=ANTSSMS;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'; TrustServerCertificate=True;"
+  ants2: "Data Source=115.31.154.120,14430;Initial Catalog=ANTSSMS_ENV2;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'; TrustServerCertificate=True;"
+  ants4: "Data Source=115.31.154.120,14430;Initial Catalog=ANTSSMS_ENV4;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'; TrustServerCertificate=True;"
+  axa: "Data Source=115.31.154.120,14430;Initial Catalog=SMS_AXA;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'; TrustServerCertificate=True;"
+  bmw: "Data Source=115.31.154.120,14430;Initial Catalog=SMS_BMW;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'; TrustServerCertificate=True;"
+  promotech: "Data Source=115.31.154.120,14430;Initial Catalog=ENV_PROMOTECH;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'; TrustServerCertificate=True;"
+  hospital: "Data Source=119.63.71.113,14430;Initial Catalog=ANTSSMS_Hospital;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'; TrustServerCertificate=True;"
+  encrypt-key: "db3OIsj+BXE9NZDy0t8W3TcNekrF+2d/1sFnWG4HnV8TZY30iTOdtVWJG8abWvB1GlOgJuQZdcF2Luqm/hccMw=="
+  AccountID: "712"
+  closeLog: "0"
+# ===========================================================================
+imagePullSecrets:
+  enabled: true
+  createSecret: 
+    registry: registry.ants.co.th
+    username: admin
+    password: K1f8kmqOB7xO64nv1VR6z9h3F
+# ===========================================================================
+resources: {}
+volumes:
+  enabled: true
+  volume:
+    - name: api-analyst-logs
+      hostPath:
+        path: /mnt/data/logs/devcenter-api-analyst
+        type: DirectoryOrCreate
+  volumeMounts:
+    - name: api-analyst-logs
+      mountPath: /app/logs/api-analyst-container
+

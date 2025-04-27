@@ -1,0 +1,72 @@
+kind: Deployment
+replicaCount: 1
+name: sms-batch-etl-otp-to-mongo
+image:
+  repository: registry.ants.co.th/apps/sms/sms-batch-etl-otp-to-mongo
+  tag: prod-7d745ff03c82ae4b49cd7e3fc1523dce6c3526b4
+  pullPolicy: IfNotPresent
+  commandEnabled: false
+# ===========================================================================
+service:
+  enabled: true
+  internalPort: 80
+  externalPort: 80
+appEnv: 
+  listDb: "hospital ants2 ants4 axa bmw ants1 promotech"
+
+  sql-con-ants1: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=ANTSOTPV2;Data Source=115.31.154.120,14330"
+  mongo-con-ants1: "mongodb://admin:P%40ssw0rd%3B@223.27.247.217:37010"
+  mongo-collection-ants1: "transactionOtp"
+  mongo-db-ants1: "logdb"
+
+  sql-con-ants2: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=ANTSOTP_ENV2;Data Source=115.31.154.120,14430"
+  mongo-con-ants2: "mongodb://admin:P%40ssw0rd%3B@223.27.247.217:37010"
+  mongo-collection-ants2: "transactionOtp"
+  mongo-db-ants2: "ants2"
+
+  sql-con-ants4: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=ANTSOTP_ENV4;Data Source=115.31.154.120,14430"
+  mongo-con-ants4: "mongodb://admin:P%40ssw0rd%3B@223.27.247.217:37010"
+  mongo-collection-ants4: "transactionOtp"
+  mongo-db-ants4: "ants4"
+
+  sql-con-axa: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=OTP_AXA_V2;Data Source=115.31.154.120,14430"
+  mongo-con-axa: "mongodb://admin:P%40ssw0rd%3B@223.27.247.217:37010"
+  mongo-collection-axa: "transactionOtp"
+  mongo-db-axa: "axa"
+
+  sql-con-bmw: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=OTP_BMW_V2;Data Source=115.31.154.120,14430"
+  mongo-con-bmw: "mongodb://admin:P%40ssw0rd%3B@223.27.247.217:37010"
+  mongo-collection-bmw: "transactionOtp"
+  mongo-db-bmw: "bmw"
+
+  sql-con-promotech: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=ANTSOTP_PROMOTECH;Data Source=115.31.154.120,14430"
+  mongo-con-promotech: "mongodb://admin:P%40ssw0rd%3B@223.27.247.217:37010"
+  mongo-collection-promotech: "transactionOtp"
+  mongo-db-promotech: "promotech"
+
+  sql-con-hospital: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=ANTSOTPV2_Hospital;Data Source=192.168.10.31,14430"
+  mongo-con-hospital: "mongodb://admin:P%40ssw0rd%3B@223.27.247.217:37010"
+  mongo-collection-hospital: "transactionOtp"
+  mongo-db-hospital: "hospital"
+  CoolDown: 60
+  closeLog: "0"
+# ===========================================================================
+imagePullSecrets:
+  enabled: true
+  createSecret: 
+    registry: registry.ants.co.th
+    username: admin
+    password: K1f8kmqOB7xO64nv1VR6z9h3F
+# ===========================================================================
+resources: {}
+volumes:
+  enabled: true
+  volume:
+    - name: batch-etl-otp-to-mongo-logs
+      hostPath:
+        path: /mnt/data/logs/devcenter-batch-etl-otp-to-mongo
+        type: DirectoryOrCreate
+  volumeMounts:
+    - name: batch-etl-otp-to-mongo-logs
+      mountPath: /app/logs/batch-etl-otp-to-mongo-container
+

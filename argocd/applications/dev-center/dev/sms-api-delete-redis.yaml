@@ -1,0 +1,35 @@
+kind: Deployment
+replicaCount: 1
+name: sms-api-delete-redis
+image:
+  repository: registry.ants.co.th/apps/sms/sms-api-delete-redis
+  tag: dev-0da7ce8cbb686e16476c8c5e20ad14dfcd720e06
+  pullPolicy: IfNotPresent
+  commandEnabled: false
+# ===========================================================================
+service:
+  enabled: true
+  internalPort: 80
+  externalPort: 80
+appEnv:
+  closeLog: "0"
+# ===========================================================================
+imagePullSecrets:
+  enabled: true
+  createSecret: 
+    registry: registry.ants.co.th
+    username: admin
+    password: K1f8kmqOB7xO64nv1VR6z9h3F
+# ===========================================================================
+resources: {}
+volumes:
+  enabled: true
+  volume:
+    - name: api-delete-redis-logs
+      hostPath:
+        path: /mnt/data/logs/dev-devcenter-api-delete-redis
+        type: DirectoryOrCreate
+  volumeMounts:
+    - name: api-delete-redis-logs
+      mountPath: /app/logs/api-delete-redis-container
+

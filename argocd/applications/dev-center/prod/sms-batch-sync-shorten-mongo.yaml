@@ -1,0 +1,88 @@
+kind: Deployment
+replicaCount: 1
+name: sms-batch-sync-shorten-mongo
+image:
+  repository: registry.ants.co.th/apps/sms/sms-batch-sync-shorten-mongo
+  tag: prod-8c3f6c0553cd4ffe4fef6676ae18d8709d791599
+  pullPolicy: IfNotPresent
+  commandEnabled: false
+# ===========================================================================
+service:
+  enabled: true
+  internalPort: 80
+  externalPort: 80
+appEnv: 
+  list-env: "hospital ants2 ants4 axa bmw ants1 promotech"
+  # list-env: "ants1 ants2 ants4 axa bmw promotech hospital"
+
+  # ants1 sql config
+  ants1-sql: "Data Source=115.31.154.120,14430;Initial Catalog=SHORTEN;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'"
+  # ants1 mongo config
+  ants1-mongodb-uri: "mongodb://admin:P%40ssw0rd%3B@223.27.247.217:37010"
+  ants1-mongo-database: "logdb"
+  ants1-mongo-collection: "shorten_log"
+
+  # ants2 sql config
+  ants2-sql: "Data Source=192.168.10.49,14430;Initial Catalog=SHORTEN_ENV2;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'"
+  # ants2 mongo config
+  ants2-mongodb-uri: "mongodb://admin:P%40ssw0rd%3B@223.27.247.217:37010"
+  ants2-mongo-database: "ants2"
+  ants2-mongo-collection: "shorten_log"
+
+  # ants4 sql config
+  ants4-sql: "Data Source=115.31.154.120,14430;Initial Catalog=SHORTEN_ENV4;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'"
+  # ants4 mongo config
+  ants4-mongodb-uri: "mongodb://admin:P%40ssw0rd%3B@223.27.247.217:37010"
+  ants4-mongo-database: "ants4"
+  ants4-mongo-collection: "shorten_log"
+
+  # axa sql config
+  axa-sql: "Data Source=115.31.154.120,14430;Initial Catalog=SHORTEN_AXA;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'"
+  # axa mongo config
+  axa-mongodb-uri: "mongodb://admin:P%40ssw0rd%3B@223.27.247.217:37010"
+  axa-mongo-database: "axa"
+  axa-mongo-collection: "shorten_log"
+
+  # bmw sql config
+  bmw-sql: "Data Source=115.31.154.120,14430;Initial Catalog=SHORTEN_BMW;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'"
+  # bmw mongo config
+  bmw-mongodb-uri: "mongodb://admin:P%40ssw0rd%3B@223.27.247.217:37010"
+  bmw-mongo-database: "bmw"
+  bmw-mongo-collection: "shorten_log"
+
+  # promotech sql config
+  promotech-sql: "Data Source=115.31.154.120,14430;Initial Catalog=SHORTEN_PROMOTECH;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'"
+  # promotech mongo config
+  promotech-mongodb-uri: "mongodb://admin:P%40ssw0rd%3B@223.27.247.217:37010"
+  promotech-mongo-database: "promotech"
+  promotech-mongo-collection: "shorten_log"
+
+  # hospital sql config
+  hospital-sql: "Data Source=119.63.71.113,14430;Initial Catalog=SHORTEN_HOSPITAL;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'"
+  # hospital mongo config
+  hospital-mongodb-uri: "mongodb://admin:P%40ssw0rd%3B@223.27.247.217:37010"
+  hospital-mongo-database: "hospital"
+  hospital-mongo-collection: "shorten_log"
+
+  Interval: "3000"
+  closeLog: "0"
+  # ===========================================================================
+imagePullSecrets:
+  enabled: true
+  createSecret: 
+    registry: registry.ants.co.th
+    username: admin
+    password: K1f8kmqOB7xO64nv1VR6z9h3F
+# ===========================================================================
+resources: {}
+volumes:
+  enabled: true
+  volume:
+    - name: sms-batch-sync-shorten-mongo-logs
+      hostPath:
+        path: /mnt/data/logs/dev-devcenter-batch-sync-shorten-mongo
+        type: DirectoryOrCreate
+  volumeMounts:
+    - name: sms-batch-sync-shorten-mongo-logs
+      mountPath: /app/logs/batch-sync-shorten-mongo-container
+

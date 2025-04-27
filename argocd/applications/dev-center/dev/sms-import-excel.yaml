@@ -1,0 +1,66 @@
+kind: Deployment
+replicaCount: 1
+name: sms-import-excel
+image:
+  repository: registry.ants.co.th/apps/sms/sms-import-excel
+  tag: dev-f2274ee66950cb6f3c357ffb145522ff219cae66
+  pullPolicy: IfNotPresent
+  commandEnabled: false
+# ===========================================================================
+service:
+  enabled: true
+  internalPort: 80
+  externalPort: 80
+appEnv: 
+  # list env and connection string start
+  listDb: "axa bmw ants1"
+  ants1: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=SMS_KUBE;Data Source=210.1.61.185,14430"
+  axa: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=SMS_KUBE_PROD_ENV1;Data Source=210.1.61.185,14430"
+  bmw: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=SMS_KUBE_PROD_ENV2;Data Source=210.1.61.185,14430"
+  shorten-ants1: "Data Source=210.1.61.185,14430;Initial Catalog=SHORTEN;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'"
+  shorten-axa: "Data Source=210.1.61.185,14430;Initial Catalog=SHORTEN_AXA;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'"
+  shorten-bmw: "Data Source=210.1.61.185,14430;Initial Catalog=SHORTEN;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'"
+  closeLog: "0"
+
+  # list env and connection string end
+
+  # Database PROD
+  ANTS.PROD.BLACKLIST: "Data Source=210.1.61.185,14430;Initial Catalog=BLACKLIST;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'"
+  ANTS.PROD.ACCOUNT: "Data Source=210.1.61.185,14430;Initial Catalog=ACCOUNT_KUBE;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'"
+
+  # Shorten URL Domain
+  shortenUrlDomain: "c0c.ants.co.th/"
+
+  ECM.URL: "http://192.168.10.12:51010/api/file/getfile/"
+  ECM.USER: "smsimport"
+  ECM.PASSWORD: "P@ssw0rd"
+  BLK.MESSAGE: " หากต้องการยกเลิก SMS คลิก https://consent.message-info.me/"
+  CONSENT.MESSAGE: " กรุณาทำเอกสาร CONSENT จากทางเราคลิก "
+  isOperator: "TRUE"
+
+  rabbitHost: "210.1.61.184"
+  rabbitUser: "guest"
+  rabbitPass: "guest"
+  rabbitQueueTrueIsGame: "2317451109"
+  rabbitQueueTrue: "2317451109"
+  rabbitQueueDtac: "service01"
+  rabbitExchange: "amq.direct"
+# ===========================================================================
+imagePullSecrets:
+  enabled: true
+  createSecret: 
+    registry: registry.ants.co.th
+    username: admin
+    password: K1f8kmqOB7xO64nv1VR6z9h3F
+# ===========================================================================
+resources: {}
+volumes:
+  enabled: true
+  volume:
+    - name: import-excel-logs
+      hostPath:
+        path: /mnt/data/logs/dev-devcenter-import-excel
+        type: DirectoryOrCreate
+  volumeMounts:
+    - name: import-excel-logs
+      mountPath: /app/logs/import-excel-container

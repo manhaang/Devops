@@ -1,0 +1,55 @@
+kind: Deployment
+replicaCount: 1
+name: sms-create-transaction-api
+image:
+  repository: registry.ants.co.th/apps/sms/sms-create-transaction-api
+  tag: prod-b46bc9565250df3866a122a9ea2d1021fc3485ac
+  pullPolicy: IfNotPresent
+  commandEnabled: false
+imagePullSecrets:
+  - ants-registry
+# ===========================================================================
+service:
+  enabled: true
+  internalPort: 80
+  externalPort: 80 
+appEnv: 
+  # Other Settings
+  isTemp: "True"
+  batchname: "Batch InsertSMSInfoAPI"
+  Interval: "10000"
+  RowAmount: "10000"
+
+# MongoDB Configuration
+  MongoConnect: "mongodb://root:J7yWBFyBsJ@mongosend-mongodb.database.svc.cluster.local:27017"
+  MongoCollectionName: "transaction"
+  MongoDataBaseName: "send"
+  DatabaseConnections:  "hospital ants2 ants4 axa bmw ants1 promotech"
+  # DatabaseConnections:  "ants1 ants2 ants4 axa bmw promotech hospital"
+  ants1: "Data Source=115.31.154.120,14430;Initial Catalog=ANTSSMS;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'"
+  ants2: "Data Source=115.31.154.120,14430;Initial Catalog=ANTSSMS_ENV2;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'"
+  ants4: "Data Source=115.31.154.120,14430;Initial Catalog=ANTSSMS_ENV4;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'"
+  axa: "Data Source=115.31.154.120,14430;Initial Catalog=SMS_AXA;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'"
+  bmw: "Data Source=115.31.154.120,14430;Initial Catalog=SMS_BMW;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'"
+  hospital: "Data Source=119.63.71.113,14430;Initial Catalog=ANTSSMS_Hospital;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'"
+  promotech: "Data Source=115.31.154.120,14430;Initial Catalog=ENV_PROMOTECH;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'"
+  closeLog: "0"
+# ===========================================================================
+imagePullSecrets:
+  enabled: true
+  createSecret: 
+    registry: registry.ants.co.th
+    username: admin
+    password: K1f8kmqOB7xO64nv1VR6z9h3F
+# ===========================================================================
+resources: {}
+volumes:
+  enabled: true
+  volume:
+    - name: create-transaction-api-logs
+      hostPath:
+        path: /mnt/data/logs/devcenter-create-transaction-api
+        type: DirectoryOrCreate
+  volumeMounts:
+    - name: create-transaction-api-logs
+      mountPath: /app/logs/create-transaction-api-container

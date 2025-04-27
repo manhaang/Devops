@@ -1,0 +1,52 @@
+kind: Deployment
+replicaCount: 1
+name: sms-batch-report-otp
+image:
+  repository: registry.ants.co.th/apps/sms/sms-batch-report-otp
+  tag: prod-3e05f27c758ca3609431c504345293c70e43746f
+  pullPolicy: IfNotPresent
+  commandEnabled: false
+# ===========================================================================
+service:
+  enabled: true
+  internalPort: 80
+  externalPort: 80
+appEnv: 
+  ReportCenter: "Data Source=103.212.181.40,14430;Initial Catalog=REPORT_CENTER;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'; TrustServerCertificate=True; Encrypt=False;"
+  ACCOUNT: "Data Source=103.212.181.33,14430;Initial Catalog=ANTSACCOUNT;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'; TrustServerCertificate=True; Encrypt=False;"
+  RowAmount: "500000"
+  Interval: "1000"
+  batchname: "batch reportOTP "
+  nodeApiURL: "http://103.212.181.11:3001"
+  timers: "100000"
+  path: "C:\\Report\\"
+  shortenUrlDomain: "c0c.me/"
+  offsets: "100000"
+  sleep: "10000"
+  maxRows: "100000"
+  buffers: "500000"
+  isThreads: "5"
+  Day_of_monthly: "5"
+  ECM.URL: "http://119.63.68.220:51010/api/file/getfile/"
+  UploadNewEcm_Url: "http://119.63.68.220:51010/api/file/uploadfile_formdata"
+  auth_newecm: "smsnewreport:P@ssw0rd"
+  closeLog: "0"
+# ===========================================================================
+imagePullSecrets:
+  enabled: true
+  createSecret: 
+    registry: registry.ants.co.th
+    username: admin
+    password: K1f8kmqOB7xO64nv1VR6z9h3F
+# ===========================================================================
+resources: {}
+volumes:
+  enabled: true
+  volume:
+    - name: sms-batch-report-otp-logs
+      hostPath:
+        path: /mnt/data/logs/devcenter-batch-report-otp
+        type: DirectoryOrCreate
+  volumeMounts:
+    - name: sms-batch-report-otp-logs
+      mountPath: /app/logs/sms-batch-report-otp-container

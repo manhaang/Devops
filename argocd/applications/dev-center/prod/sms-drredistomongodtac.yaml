@@ -1,0 +1,44 @@
+kind: Deployment
+replicaCount: 1
+name: sms-drredistomongodtac
+image:
+  repository: registry.ants.co.th/apps/sms/sms-drredistomongodtac
+  tag: prod-1e6dc79b3218504f0abe60cfb542d9efa6a4efca
+  pullPolicy: IfNotPresent
+  commandEnabled: false
+# ===========================================================================
+service:
+  enabled: true
+  internalPort: 80
+  externalPort: 80
+appEnv: 
+  MongoConnect: "mongodb://root:ElqwJETIJN@mongodr-mongodb.database.svc.cluster.local:27017" #"mongodb://210.1.61.187:37017"
+  MongoDataBaseName: "dr"
+  MongoCollectionName: "deliveryreport_dtac"
+  RowAmount: "2000"
+  RedisConnect: "redis-dr-dtac-master.database.svc.cluster.local:6379"
+  timers: "5000"
+  ServerFilePath: "C:\\DeliveryPromoLog\\"
+  Interval: "5000"
+  batchname: "batch RedisMongoSERVER ProMoTech"
+  RedisKey: "DTACDR:"
+  closeLog: "0"
+# ===========================================================================
+imagePullSecrets:
+  enabled: true
+  createSecret: 
+    registry: registry.ants.co.th
+    username: admin
+    password: K1f8kmqOB7xO64nv1VR6z9h3F
+# ===========================================================================
+resources: {}
+volumes:
+  enabled: true
+  volume:
+    - name: import-drredistomongodtac
+      hostPath:
+        path: /mnt/data/logs/devcenter-drredistomongodtac
+        type: DirectoryOrCreate
+  volumeMounts:
+    - name: import-drredistomongodtac
+      mountPath: /app/logs/drredistomongodtac-container

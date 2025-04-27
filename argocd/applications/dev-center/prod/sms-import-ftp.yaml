@@ -1,0 +1,57 @@
+kind: Deployment
+replicaCount: 1
+name: sms-import-ftp
+image:
+  repository: registry.ants.co.th/apps/sms/sms-import-ftp
+  tag: prod-72ecde45b3010a2bcc426dca992293ec8406d363
+  pullPolicy: IfNotPresent
+  commandEnabled: false
+# ===========================================================================
+service:
+  enabled: true
+  internalPort: 80
+  externalPort: 80
+appEnv: 
+  general-sleep: "3000"
+  general-batchname: "IMPORT FTP"
+  general-isOperator: "TRUE"
+  task-env: 2
+  task-size-env: 2
+
+  dbAccount: "Data Source=103.212.181.33,14430;Initial Catalog=ANTSACCOUNT;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'"
+
+  rabbitHost: "rabbitmqms.database.svc.cluster.local"
+  rabbitUser: "user"
+  rabbitPass: "vljjJhH9JhnFlSIF"
+  rabbitQueueTrueIsGame: "2325131101,2325131102,2325131103,2325131105,2325131106,2325131107,2325131108"
+  rabbitQueueTrue: "2317451107,2317451111,2317451112,2317451100,2317451101,2317451102,2317451104"
+  rabbitQueueDtac: "service01"
+
+  listDb: "hospital ants2 ants4 axa bmw ants1 promotech"
+  ants1: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=ANTSSMS;Data Source=115.31.154.120,14430"
+  ants2: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=ANTSSMS_ENV2;Data Source=115.31.154.120,14430"
+  ants4: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=ANTSSMS_ENV4;Data Source=115.31.154.120,14430"
+  axa: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=SMS_AXA;Data Source=115.31.154.120,14430"
+  bmw: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=SMS_BMW;Data Source=115.31.154.120,14430"
+  hospital: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=ANTSSMS_Hospital;Data Source=119.63.71.113,14430"
+  promotech: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=SMS_BMW;Data Source=115.31.154.120,14430"
+  closeLog: "0"
+# ===========================================================================
+imagePullSecrets:
+  enabled: true
+  createSecret: 
+    registry: registry.ants.co.th
+    username: admin
+    password: K1f8kmqOB7xO64nv1VR6z9h3F
+# ===========================================================================
+resources: {}
+volumes:
+  enabled: true
+  volume:
+    - name: import-ftp-logs
+      hostPath:
+        path: /mnt/data/logs/dev-devcenter-import-ftp
+        type: DirectoryOrCreate
+  volumeMounts:
+    - name: import-ftp-logs
+      mountPath: /app/logs/import-ftp-container

@@ -1,0 +1,53 @@
+kind: Deployment
+replicaCount: 1
+name: sms-import-ftp
+image:
+  repository: registry.ants.co.th/apps/sms/sms-import-ftp
+  tag: dev-9bdf2416b533ee45a0bb2d350f593a7310d785ed
+  pullPolicy: IfNotPresent
+  commandEnabled: false
+# ===========================================================================
+service:
+  enabled: true
+  internalPort: 80
+  externalPort: 80
+appEnv: 
+  general-sleep: "3000"
+  general-batchname: "IMPORT FTP"
+  general-isOperator: "TRUE"
+  task-env: 2
+  task-size-env: 2
+  
+  dbAccount: "Data Source=210.1.61.185,14430;Initial Catalog=ACCOUNT_KUBE;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'"
+
+  rabbitHost: "210.1.61.184"
+  rabbitUser: "guest"
+  rabbitPass: "guest"
+  rabbitQueueTrueIsGame: "2317451109"
+  rabbitQueueTrue: "2317451109"
+  rabbitQueueDtac: "service01"
+
+  listDb: "ants1 axa"
+  ants1: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=SMS_KUBE;Data Source=210.1.61.185,14430"
+  axa: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=SMS_KUBE_PROD_ENV1;Data Source=210.1.61.185,14430"
+  bmw: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=SMS_KUBE_PROD_ENV2;Data Source=210.1.61.185,14430"
+  closeLog: "0"
+# ===========================================================================
+imagePullSecrets:
+  enabled: true
+  createSecret: 
+    registry: registry.ants.co.th
+    username: admin
+    password: K1f8kmqOB7xO64nv1VR6z9h3F
+# ===========================================================================
+resources: {}
+volumes:
+  enabled: true
+  volume:
+    - name: import-ftp-logs
+      hostPath:
+        path: /mnt/data/logs/dev-devcenter-import-ftp
+        type: DirectoryOrCreate
+  volumeMounts:
+    - name: import-ftp-logs
+      mountPath: /app/logs/import-ftp-container

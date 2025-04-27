@@ -1,0 +1,91 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: dev-center-multi-org-applicationset
+  namespace: argocd
+spec:
+  generators:
+    - matrix:
+        generators:
+          - list:
+              elements:
+                - organization: dev-center
+          - list:
+              elements:
+                - app: gettoken
+                - app: public
+                - app: private
+                - app: api-analyst
+                - app: api-delete-redis
+                - app: import-excel
+                - app: import-schedule
+                - app: import-ftp
+                - app: webs
+                - app: batch-update-callback
+                - app: batch-callback
+                - app: publictoredis
+                - app: create-transaction-api
+                - app: otp
+                - app: apidr
+                - app: batch-report-commu
+                - app: batch-report-otp
+                - app: drredistomongotrue
+                - app: drredistomongodtac
+                - app: dr-center-create-transaction
+                # - app: dr-center-create-transaction-service01
+                # - app: dr-center-create-transaction-service02
+                # - app: dr-center-create-transaction-service03
+                - app: api-dr-dtac
+                - app: batch-etl-commu-to-mongo
+                - app: batch-etl-otp-to-mongo
+                - app: batch-import-person
+                - app: batch-sync-shorten-mongo
+                # - app: sendsms
+                - app: batchsend-mailalert
+                - app: batch-ftp-export
+                - app: batch-report-recurring
+                - app: shorten-web
+                - app: downloadreport-web
+                # - app: batch-delete-transaction-sms-dr
+                # - app: sendsms-service01
+                # - app: sendsms-service02
+                # - app: sendsms-service03
+                # - app: sendsms-service04
+                # - app: sendsms-service05
+                # - app: sendsms-service06
+                # - app: sendsms-service07
+                # - app: sendsms-service08
+                # - app: sendsms-service09
+                # - app: sendsms-service10
+                # - app: sendsms-service11
+                # - app: sendsms-service12
+                - app: apicallbacklog
+  template:
+    metadata:
+      name: "{{organization}}-{{app}}"
+      labels:
+        type: app
+        organization: "{{organization}}"
+    spec:
+      destination:
+        namespace: "{{organization}}"
+        server: https://kubernetes.default.svc
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+          preserveResourcesOnDeletion: true
+      createNamespace: true
+      source:
+        repoURL: https://dev.azure.com/AntsDevelop/sms-platform/_git/devops-automate-center
+        path: argocd/helmchart
+        targetRevision: main
+        helm:
+          releaseName: "{{organization}}-{{app}}"
+          valueFiles:
+            - "../applications/{{organization}}/dev/sms-{{app}}.yaml"
+      project: default
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true

@@ -1,0 +1,124 @@
+apiVersion: apps/v1
+kind: {{ .Values.kind }}
+metadata:
+  name: {{ include "app.fullname" . }}
+  labels:
+    {{- include "app.labels" . | nindent 4 }}
+spec:
+{{- if or (eq .Values.kind "Deployment") (eq .Values.kind "StatefulSet") }}
+  replicas: {{ .Values.replicaCount }}
+{{- end }}
+  selector:
+    matchLabels:
+      {{- include "app.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "app.selectorLabels" . | nindent 8 }}
+    spec:
+    {{- if .Values.volumes.enabled }}
+      volumes:
+        - name: tz-config
+          hostPath:
+            path: /etc/localtime
+        {{- toYaml .Values.volumes.volume | nindent 8 }}
+    {{- end }}
+    {{- if .Values.imagePullSecrets.enabled }}
+      imagePullSecrets:
+        - name: {{ include "app.Secretname" . }}
+    {{- end }}
+    {{- if .Values.initContainers.enabled }}
+      initContainers:
+    {{- if .Values.initContainers.custom.enabled }}  
+        {{ toYaml .Values.initContainers.custom.containers | nindent 8 }}
+          {{- with .Values.appEnv }}
+          env:          
+            {{- range $key, $value := . }}
+            - name: {{ $key }}
+              value: {{ $value | toString | quote }}
+            {{- end }}
+          {{- end }}  
+          {{- if .Values.secretEnv }}
+            {{ include "secretEnvName" $ | indent 12 }}
+          {{- end }}
+          {{- if .Values.extraEnv }}
+            {{ include "extraEnvName" $ | indent 12 }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+    {{- end }}
+    {{- end }}
+      serviceAccountName: {{ include "app.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+        {{- if .Values.image.commandEnabled }}
+          command:
+          {{- toYaml .Values.image.command | nindent 12 }}
+          {{- if .Values.image.args }}
+          args:
+          {{- toYaml .Values.image.args | nindent 12 }}
+          {{- end }}
+        {{- end }}
+          ports:
+            - name: default
+              containerPort: {{ .Values.service.internalPort }}
+          {{- with .Values.appEnv }}
+          env:
+            {{- range $key, $value := . }}
+            - name: {{ $key }}
+              value: {{ $value | toString | quote }}
+            {{- end }}
+          {{- end }}
+          {{- if .Values.secretEnv }}
+            {{ include "secretEnvName" . | indent 12 }}
+          {{- end }}
+          {{- if .Values.extraEnv }}
+            {{ include "extraEnvName" . | indent 12 }}
+          {{- end }}
+          {{- if .Values.volumes.enabled }}
+          volumeMounts:
+            - name: tz-config
+              mountPath: /etc/localtime
+            {{- toYaml .Values.volumes.volumeMounts | nindent 12 }}
+          {{- end }}
+          {{- if .Values.livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.livenessProbe.httpGet.path }}
+              port: {{ .Values.livenessProbe.httpGet.port }}
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.livenessProbe.successThreshold }}
+            failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+          {{- end }}
+          {{- if .Values.readinessProbe.enabled }}
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.readinessProbe.httpGet.path }}
+              port: {{ .Values.readinessProbe.httpGet.port }}
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

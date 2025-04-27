@@ -1,0 +1,86 @@
+kind: Deployment
+replicaCount: 1
+name: sms-otp
+image:
+  repository: registry.ants.co.th/apps/sms/sms-otp
+  tag: dev-cf46dc3e5d2105e90eb7174ad97d135b2df2ae1a
+  pullPolicy: IfNotPresent
+  commandEnabled: false
+# ===========================================================================
+service:
+  enabled: true
+  internalPort: 80
+  externalPort: 80
+  
+appEnv: 
+  JWT_KEY: "db3OIsj+BXE9NZDy0t8W3TcNekrF+2d/1sFnWG4HnV8TZY30iTOdtVWJG8abWvB1GlOgJuQZdcF2Luqm/hccMw=="
+  REDIS_HOST: "redis-otp-dev-master.database.svc.cluster.local:6379"
+  #ENV
+  #dev: "redis-otp-dev-master.database.svc.cluster.local:6379"
+  #ants: "redis-otp-ants-master.database.svc.cluster.local:6379"
+  #ants2: "redis-otp-ants2-master.database.svc.cluster.local:6379"
+  #ants4: "redis-otp-ants4-master.database.svc.cluster.local:6379"
+  #axa: "redis-otp-axa-master.database.svc.cluster.local:6379"
+  #bmw: "redis-otp-bmw-master.database.svc.cluster.local:6379"
+  #hospital: "redis-otp-hospital-master.database.svc.cluster.local:6379"
+  #promotech: "redis-otp-promotech-master.database.svc.cluster.local:6379"
+  #ENV
+
+  MONGO_CONNECTIONSTRING: "mongodb://210.1.61.187:37017"
+  MONGO_DB: "logdb"
+  ALLOWEDHOSTS: "*"
+
+  DEV_DB_CON_OTP: "Data Source=210.1.61.185,14430;Initial Catalog=ANTSOTP_DEV2;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'; TrustServerCertificate=True;"
+  DEV_DB_CON_SMS: "Data Source=210.1.61.185,14430;Initial Catalog=SMS_KUBE;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'; TrustServerCertificate=True;"
+
+  ANTS1_DB_CON_OTP: "Data Source=210.1.61.185,14430;Initial Catalog=ANTSOTP_DEV2;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'; TrustServerCertificate=True;"
+  ANTS1_DB_CON_SMS: "Data Source=210.1.61.185,14430;Initial Catalog=SMS_KUBE;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'; TrustServerCertificate=True;"
+
+  ANTS2_DB_CON_OTP: "Data Source=210.1.61.185,14430;Initial Catalog=ANTSOTP_DEV2;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'; TrustServerCertificate=True;"
+  ANTS2_DB_CON_SMS: "Data Source=210.1.61.185,14430;Initial Catalog=SMS_KUBE;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'; TrustServerCertificate=True;"
+
+  ANTS4_DB_CON_OTP: "Data Source=210.1.61.185,14430;Initial Catalog=ANTSOTP_DEV2;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'; TrustServerCertificate=True;"
+  ANTS4_DB_CON_SMS: "Data Source=210.1.61.185,14430;Initial Catalog=SMS_KUBE;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'; TrustServerCertificate=True;"
+
+  AXA_DB_CON_OTP: "Data Source=210.1.61.185,14430;Initial Catalog=ANTSOTP_DEV2_ENV1;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'; TrustServerCertificate=True;"
+  AXA_DB_CON_SMS: "Data Source=210.1.61.185,14430;Initial Catalog=SMS_KUBE_PROD_ENV1;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'; TrustServerCertificate=True;"
+
+  BMW_DB_CON_OTP: "Data Source=210.1.61.185,14430;Initial Catalog=ANTSOTP_DEV2;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'; TrustServerCertificate=True;"
+  BMW_DB_CON_SMS: "Data Source=210.1.61.185,14430;Initial Catalog=SMS_KUBE_PROD_ENV2;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'; TrustServerCertificate=True;"
+
+  HOSPITAL_DB_CON_OTP: "Data Source=210.1.61.185,14430;Initial Catalog=ANTSOTP_DEV2;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'; TrustServerCertificate=True;"
+  HOSPITAL_DB_CON_SMS: "Data Source=210.1.61.185,14430;Initial Catalog=SMS_KUBE;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'; TrustServerCertificate=True;"
+
+  PROMOTECH_DB_CON_OTP: "Data Source=210.1.61.185,14430;Initial Catalog=ANTSOTP_DEV2;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'; TrustServerCertificate=True;"
+  PROMOTECH_DB_CON_OTP: "Data Source=210.1.61.185,14430;Initial Catalog=SMS_KUBE;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'; TrustServerCertificate=True;"
+
+  DB_CON_ACCOUNT: "Data Source=210.1.61.185,14430;Initial Catalog=ACCOUNT_KUBE;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'; TrustServerCertificate=True;"
+  ISOPERATOR: "TRUE"
+  SMSTRANTYPE: "4"
+  rabbitHost: "210.1.61.184"
+  rabbitUser: "guest"
+  rabbitPass: "guest"
+  rabbitQueue: "2317451109"
+  REDIS_TRANFER_CONNECT: "192.168.10.51:6380"
+  REDIS_TRANFER_KEY: "PUBAPI_LASTOTPREQ:"
+  URLTRANSACTIONINFO: "http://13.76.244.175:9100/createTransactionInfo"
+  closeLog: "0"
+# ===========================================================================
+imagePullSecrets:
+  enabled: true
+  createSecret: 
+    registry: registry.ants.co.th
+    username: admin
+    password: K1f8kmqOB7xO64nv1VR6z9h3F
+# ===========================================================================
+resources: {}
+volumes:
+  enabled: true
+  volume:
+    - name: otp-logs
+      hostPath:
+        path: /mnt/data/logs/dev-devcenter-otp
+        type: DirectoryOrCreate
+  volumeMounts:
+    - name: otp-logs
+      mountPath: /app/logs/otp-container

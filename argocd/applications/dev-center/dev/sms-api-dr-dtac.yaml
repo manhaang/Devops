@@ -1,0 +1,37 @@
+kind: Deployment
+replicaCount: 1
+name: sms-api-dr-dtac
+image:
+  repository: registry.ants.co.th/apps/sms/sms-api-dr-dtac
+  tag: dev-d2e5ddc3f63e159af2cab9aa0793c3870f712b1f
+  pullPolicy: IfNotPresent
+  commandEnabled: false
+# ===========================================================================
+service:
+  enabled: true
+  internalPort: 80
+  externalPort: 80
+appEnv:  
+  REDIS_URL: "210.1.61.185:6380"
+  REDIS_KEY: "DTACDRID2736:"
+  closeLog: "0"
+# ===========================================================================
+imagePullSecrets:
+  enabled: true
+  createSecret: 
+    registry: registry.ants.co.th
+    username: admin
+    password: K1f8kmqOB7xO64nv1VR6z9h3F
+# ===========================================================================
+resources: {}
+volumes:
+  enabled: true
+  volume:
+    - name: sms-api-dr-dtac-logs
+      hostPath:
+        path: /mnt/data/logs/dev-devcenter-api-dr-dtac
+        type: DirectoryOrCreate
+  volumeMounts:
+    - name: sms-api-dr-dtac-logs
+      mountPath: /app/logs/sms-api-dr-dtac-container
+

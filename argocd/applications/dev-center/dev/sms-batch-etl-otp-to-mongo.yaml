@@ -1,0 +1,45 @@
+kind: Deployment
+replicaCount: 1
+name: sms-batch-etl-otp-to-mongo
+image:
+  repository: registry.ants.co.th/apps/sms/sms-batch-etl-otp-to-mongo
+  tag: dev-7d745ff03c82ae4b49cd7e3fc1523dce6c3526b4
+  pullPolicy: IfNotPresent
+  commandEnabled: false
+# ===========================================================================
+service:
+  enabled: true
+  internalPort: 80
+  externalPort: 80
+appEnv: 
+  listDb: "ants1 axa"
+  sql-con-ants1: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=ANTSOTP_DEV2;Data Source=210.1.61.185,14430"
+  sql-con-axa: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=ANTSOTP_DEV2_ENV1;Data Source=210.1.61.185,14430"
+  mongo-con-ants1: "mongodb://210.1.61.187:37017"
+  mongo-con-axa: "mongodb://210.1.61.187:37017"
+  mongo-collection-axa: "otpReport"
+  mongo-collection-ants1: "otpReport"
+  mongo-db-axa: "axa"
+  mongo-db-ants1: "logdb"
+  CoolDown: 60
+  closeLog: "0"
+# ===========================================================================
+imagePullSecrets:
+  enabled: true
+  createSecret: 
+    registry: registry.ants.co.th
+    username: admin
+    password: K1f8kmqOB7xO64nv1VR6z9h3F
+# ===========================================================================
+resources: {}
+volumes:
+  enabled: true
+  volume:
+    - name: batch-etl-otp-to-mongo-logs
+      hostPath:
+        path: /mnt/data/logs/dev-devcenter-batch-etl-otp-to-mongo
+        type: DirectoryOrCreate
+  volumeMounts:
+    - name: batch-etl-otp-to-mongo-logs
+      mountPath: /app/logs/batch-etl-otp-to-mongo-container
+

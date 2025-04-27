@@ -1,0 +1,42 @@
+kind: Deployment
+replicaCount: 1
+name: sms-batch-report-recurring
+image:
+  repository: registry.ants.co.th/apps/sms/sms-batch-report-recurring
+  tag: dev-8b80fb9214f0585e633108a530667dd36f10e0c1
+  pullPolicy: IfNotPresent
+  commandEnabled: false
+# ===========================================================================
+service:
+  enabled: true
+  internalPort: 80
+  externalPort: 80
+appEnv: 
+  report_centerDb: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=REPORT_CENTER;Data Source=210.1.61.185,14430"
+  Day_of_monthly: "5"
+  DatabaseConnections: "ants1 axa"
+  ants1: "Data Source=210.1.61.185,14430;Initial Catalog=SMS_KUBE;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'"
+  axa: "Data Source=210.1.61.185,14430;Initial Catalog=SMS_KUBE_PROD_ENV1;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'"
+  Interval: "10000"
+  closeLog: "0"
+  scheduleTime: "04:00"
+  # ===========================================================================
+imagePullSecrets:
+  enabled: true
+  createSecret: 
+    registry: registry.ants.co.th
+    username: admin
+    password: K1f8kmqOB7xO64nv1VR6z9h3F
+# ===========================================================================
+resources: {}
+volumes:
+  enabled: true
+  volume:
+    - name: sms-batch-report-recurring-logs
+      hostPath:
+        path: /mnt/data/logs/dev-devcenter-batch-report-recurring
+        type: DirectoryOrCreate
+  volumeMounts:
+    - name: sms-batch-report-recurring-logs
+      mountPath: /app/logs/sms-batch-report-recurring-container
+

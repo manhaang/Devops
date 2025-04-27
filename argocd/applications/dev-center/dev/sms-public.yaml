@@ -1,0 +1,66 @@
+kind: Deployment
+replicaCount: 1
+name: sms-public
+image:
+  repository: registry.ants.co.th/apps/sms/sms-public
+  tag: dev-8557e9b47eaf36e1a162b399d85afc212dd5d1b7
+  pullPolicy: IfNotPresent
+  commandEnabled: false
+imagePullSecrets:
+  - ants-registry
+# ===========================================================================
+service:
+  enabled: true
+  internalPort: 80
+  externalPort: 80
+appEnv: 
+  AllowedHosts: "*"
+  contentlength: "1600"
+  dev: "redis-public-dev-master.database.svc.cluster.local:6379"
+  ants1: "redis-public-ants-master.database.svc.cluster.local:6379"
+  ants2: "redis-public-ants2-master.database.svc.cluster.local:6379"
+  ants4: "redis-public-ants4-master.database.svc.cluster.local:6379"
+  axa: "redis-public-axa-master.database.svc.cluster.local:6379"
+  bmw: "redis-public-bmw-master.database.svc.cluster.local:6379"
+  hospital: "redis-public-hospital-master.database.svc.cluster.local:6379"
+  promotech: "redis-public-promotech-master.database.svc.cluster.local:6379"
+  RedisKey: "PUBAPI_SMSREQ:"
+  envKey: ""
+  enpointUrl: "https://sms-private-dev.ants.co.th"
+  enpointUrl_Otp: "https://sms-otp-dev.ants.co.th"
+  enpointUrl_Token_API: "https://sms-gettoken-dev.ants.co.th/api/GetToken/loginApi"
+  enpointUrl_Token: "https://sms-gettoken-dev.ants.co.th/api/GetToken/login"
+  expireMinute: "120"
+  SMSDB_1: "xxx"
+  APISMS: "xxx"
+  SMSDB_2: "xxx"
+  ANTNotifyEntities: "xxx"
+  ANTNotifyConnectionString: "210.1.61.185,14430';Database='SMS_KUBE';User Id='sa';Password='P@ssw0rd;';TrustServerCertificate=True;"
+  AccountDb: "210.1.61.185,14430';Database='ACCOUNT_KUBE';User Id='sa';Password='P@ssw0rd;';TrustServerCertificate=True;"
+  ExceptionLogs: "Server=tcp:antsdb.database.windows.net,1433;Initial Catalog=LOGS_DB;Persist Security Info=False;User ID=ants_sa;Password='P@ssw0rd;';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=180;"
+  SMS40: "Server='210.1.61.185,14430';Database='SMS_REPORT_TEMP';User Id='sa';Password='P@ssw0rd;';TrustServerCertificate=True;"
+  REPORT_CENTER: "Server='210.1.61.185,14430';Database='REPORT_CENTER';User Id='sa';Password='P@ssw0rd;';TrustServerCertificate=True;"
+  limitTotalMongo: "200000"
+  ApiDeleteRedis: "https://sms-apideleteredis-dev.ants.co.th/api/redis/del"
+  shortenUrlDomain: "c0c.ants.co.th/"
+  DOTNET_USE_POLLING_FILE_WATCHER: "1"
+  closeLog: "0"
+imagePullSecrets:
+  enabled: true
+  createSecret: 
+    registry: registry.ants.co.th
+    username: admin
+    password: K1f8kmqOB7xO64nv1VR6z9h3F
+# ===========================================================================
+resources: {}
+
+volumes:
+  enabled: true
+  volume:
+    - name: public-logs
+      hostPath:
+        path: /mnt/data/logs/dev-devcenter-public
+        type: DirectoryOrCreate
+  volumeMounts:
+    - name: public-logs
+      mountPath: /app/logs/public-container

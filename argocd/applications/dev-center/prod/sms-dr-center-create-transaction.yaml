@@ -1,0 +1,61 @@
+kind: Deployment
+replicaCount: 1
+name: sms-dr-center-create-transaction
+image:
+  repository: registry.ants.co.th/apps/sms/sms-dr-center-create-transaction
+  tag: prod-e36dd00ccc247259eda8a84815ba0da1b70d1f4a
+  pullPolicy: IfNotPresent
+  commandEnabled: false
+# ===========================================================================
+service:
+  enabled: true
+  internalPort: 80
+  externalPort: 80
+appEnv: 
+  BatchSize: "50000"
+  MongoConnectSend: "mongodb://root:J7yWBFyBsJ@mongosend-mongodb.database.svc.cluster.local:27017" #"mongodb://210.1.61.187:37017"
+  MongoDataBaseNameSend: "send"
+  MongoCollectionNameSend: "transaction"
+  MongoConnectDR_True: "mongodb://root:ElqwJETIJN@mongodr-mongodb.database.svc.cluster.local:27017" #"mongodb://210.1.61.187:37017"
+  MongoDataBaseNameDR_True: "dr"
+  MongoCollectionNameDR_True: "deliveryreport_true"
+  MongoConnectDR_Dtac: "mongodb://root:ElqwJETIJN@mongodr-mongodb.database.svc.cluster.local:27017" #"mongodb://210.1.61.187:37017"
+  MongoDataBaseNameDR_Dtac: "dr"
+  MongoCollectionNameDR_Dtac: "deliveryreport_dtac"
+  RedisConnect: "ไม่ได้ใช้"
+  RedisConnectPort: "6379"
+  timers: "10000"
+  Interval: "10000"
+  batchname: "batch DR Center Create Transaction"
+  ServerFilePath: "C:\\DeliveryPromoLog\\"
+  GATEWAYIDTRUE: "1"
+  GATEWAYIDDTAC: "1"
+  DatabaseConnections: "hospital ants2 ants4 axa bmw ants1 promotech"
+  # DatabaseConnections: "ants1 ants2 ants4 axa bmw promotech hospital"
+  ants1: "Data Source=115.31.154.120,14430;Initial Catalog=ANTSSMS;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'"
+  ants2: "Data Source=115.31.154.120,14430;Initial Catalog=ANTSSMS_ENV2;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'"
+  ants4: "Data Source=115.31.154.120,14430;Initial Catalog=ANTSSMS_ENV4;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'"
+  axa: "Data Source=115.31.154.120,14430;Initial Catalog=SMS_AXA;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'"
+  bmw: "Data Source=115.31.154.120,14430;Initial Catalog=SMS_BMW;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'"
+  promotech: "Data Source=115.31.154.120,14430;Initial Catalog=ENV_PROMOTECH;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'"
+  hospital: "Data Source=119.63.71.113,14430;Initial Catalog=ANTSSMS_Hospital;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'"
+  closeLog: "0"
+# ===========================================================================
+imagePullSecrets:
+  enabled: true
+  createSecret: 
+    registry: registry.ants.co.th
+    username: admin
+    password: K1f8kmqOB7xO64nv1VR6z9h3F
+# ===========================================================================
+resources: {}
+volumes:
+  enabled: true
+  volume:
+    - name: sms-dr-center-create-transaction-logs
+      hostPath:
+        path: /mnt/data/logs/devcenter-create-transaction
+        type: DirectoryOrCreate
+  volumeMounts:
+    - name: sms-dr-center-create-transaction-logs
+      mountPath: /app/logs/sms-dr-center-create-transaction-container

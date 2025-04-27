@@ -1,0 +1,43 @@
+kind: Deployment
+replicaCount: 1
+name: sms-drredistomongotrue
+image:
+  repository: registry.ants.co.th/apps/sms/sms-drredistomongotrue
+  tag: dev-05fa61a7989c52cfe3349b1139ae7300878cfc93
+  pullPolicy: IfNotPresent
+  commandEnabled: false
+# ===========================================================================
+service:
+  enabled: true
+  internalPort: 80
+  externalPort: 80
+appEnv: 
+  MongoConnect: "mongodb://210.1.61.187:37017"
+  MongoDataBaseName: "logdb"
+  MongoCollectionName: "deliveryreport_true"
+  RedisConnect: "redis-dr-true-master.database.svc.cluster.local:6379"
+  timers: "10000"
+  ServerFilePath: "C:\\DeliveryPromoLog\\"
+  Interval: "10000"
+  batchname: "batch RedisMongoSERVER True"
+  RedisKey: "NXMLID:"
+  closeLog: "0"
+# ===========================================================================
+imagePullSecrets:
+  enabled: true
+  createSecret: 
+    registry: registry.ants.co.th
+    username: admin
+    password: K1f8kmqOB7xO64nv1VR6z9h3F
+# ===========================================================================
+resources: {}
+volumes:
+  enabled: true
+  volume:
+    - name: import-drredistomongotrue
+      hostPath:
+        path: /mnt/data/logs/dev-devcenter-drredistomongotrue
+        type: DirectoryOrCreate
+  volumeMounts:
+    - name: import-drredistomongotrue
+      mountPath: /app/logs/drredistomongotrue-container

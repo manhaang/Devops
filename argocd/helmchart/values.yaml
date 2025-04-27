@@ -1,0 +1,116 @@
+kind: {}
+# Deployment
+# DaemonSet
+# StatefulSet
+replicaCount: 1
+name: example
+image:
+  repository: {}
+  tag: {}
+  pullPolicy: Always
+  commandEnabled: false
+  command: []
+  args: []
+imagePullSecrets:
+  - ants-registry
+service:
+  enabled: false
+  type: ClusterIP
+  externalPort: 80
+  internalPort: {}
+
+strategy:
+  type: RollingUpdate
+
+ingress:
+  enabled: false
+  hosts:
+    - host: chart-example.local
+      paths: 
+      - /
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+volumes:
+  enabled: true
+  # for mount tz
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: truea
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name:
+
+resources: {}
+  # limits:
+  #   cpu: 100m
+  #   memory: 100Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 100Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+livenessProbe:
+  enabled: false
+  httpGet:
+    path: /v1/healthcheck
+    port: default
+  initialDelaySeconds: 30
+  periodSeconds: 30
+  timeoutSeconds: 5
+  successThreshold: 1
+  failureThreshold: 3
+
+readinessProbe:
+  enabled: false
+  httpGet:
+    path: /v1/healthcheck
+    port: default
+  initialDelaySeconds: 30
+  periodSeconds: 5
+  timeoutSeconds: 5
+  successThreshold: 1
+  failureThreshold: 10
+
+initContainers:
+  enabled: false
+  custom:
+    enabled: false
+  # custom:
+  #   enabled: {}
+  #   # custom many init container by using array
+  #   container:
+  #     - name: test
+  #       image: test
+  #       command: ['sh', '-c', 'test']
+  #     - name: test1
+  #       image: test1
+  #       command: ['sh', '-c', 'test1']
+
+appEnv:
+  LOG_LEVEL: debug
+extraEnv: {}
+ #worker_node: metadata.name
+secretEnv: {}
+ #LOG_LEVEL: debug

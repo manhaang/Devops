@@ -1,0 +1,35 @@
+kind: Deployment
+replicaCount: 1
+name: sms-downloadreport-web
+image:
+  repository: registry.ants.co.th/apps/sms/sms-downloadreport-web
+  tag: dev-655040ab867edf4fabd2155ab3fcf5892e3311e4
+  pullPolicy: IfNotPresent
+  commandEnabled: false
+# ===========================================================================
+service:
+  enabled: true
+  internalPort: 80
+  externalPort: 80
+appEnv:
+  url: "http://sms-private-dev.ants.co.th/"
+  url-private: "http://sms-private-dev.ants.co.th/"
+# ===========================================================================
+imagePullSecrets:
+  enabled: true
+  createSecret: 
+    registry: registry.ants.co.th
+    username: admin
+    password: K1f8kmqOB7xO64nv1VR6z9h3F
+# ===========================================================================
+resources: {}
+volumes:
+  enabled: true
+  volume:
+    - name: downloadreport-web-logs
+      hostPath:
+        path: /mnt/data/logs/dev-app-downloadreport-web
+        type: DirectoryOrCreate
+  volumeMounts:
+    - name: downloadreport-web-logs
+      mountPath: /app/logs/downloadreport-web-container

@@ -1,0 +1,59 @@
+kind: Deployment
+replicaCount: 1
+name: sms-batch-callback
+image:
+  repository: registry.ants.co.th/apps/sms/sms-batch-callback
+  tag: dev-13d5e2266e7f6db6ddccc545a4d07cda9338f0d3
+  pullPolicy: IfNotPresent
+  commandEnabled: false
+# ===========================================================================
+service:
+  enabled: true
+  internalPort: 80
+  externalPort: 80
+appEnv: 
+  Interval: "3000"
+
+  list-env: "dev ants1 axa"
+  #dev db config
+  dev: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=SMS_KUBE;Data Source=210.1.61.185,14430"
+  #mail config
+  dev_auth_email: "no-reply@message-info.me"
+  dev_auth_passowrd: "Ants2015$"
+  dev_emailto: "nuttapon.a@ants.co.th"
+
+  #ants1 db config
+  ants1: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=SMS_KUBE;Data Source=210.1.61.185,14430"
+  #mail config
+  ants1_auth_email: "no-reply@message-info.me"
+  ants1_auth_passowrd: "Ants2015$"
+  ants1_emailto: "nuttapon.a@ants.co.th"
+
+  #axa db config
+  axa: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=SMS_KUBE_PROD_ENV1;Data Source=210.1.61.185,14430"
+  #mail config
+  axa_auth_email: "no-reply@message-info.me"
+  axa_auth_passowrd: "Ants2015$"
+  axa_emailto: "nuttapon.a@ants.co.th"
+  closeLog: "0"
+
+# ===========================================================================
+imagePullSecrets:
+  enabled: true
+  createSecret: 
+    registry: registry.ants.co.th
+    username: admin
+    password: K1f8kmqOB7xO64nv1VR6z9h3F
+# ===========================================================================
+resources: {}
+volumes:
+  enabled: true
+  volume:
+    - name: batch-callback-logs
+      hostPath:
+        path: /mnt/data/logs/dev-devcenter-batch-callback
+        type: DirectoryOrCreate
+  volumeMounts:
+    - name: batch-callback-logs
+      mountPath: /app/logs/batch-callback-container
+

@@ -1,0 +1,122 @@
+kind: Deployment
+replicaCount: 1
+name: sms-batchsend-mailalert
+image:
+  repository: registry.ants.co.th/apps/sms/sms-batchsend-mailalert
+  tag: prod-f305e8e7c26e9a88e312d313c640e792642e27ce
+  pullPolicy: IfNotPresent
+  commandEnabled: false
+# ===========================================================================
+service:
+  enabled: true
+  internalPort: 80
+  externalPort: 80
+appEnv: 
+  Interval: "3000"
+
+  EnvSelection: "hospital ants2 ants4 axa bmw ants1 promotech"
+  # EnvSelection: "ants1 ants2 ants4 axa bmw promotech hospital"
+
+  ants1_sms: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=ANTSSMS;Data Source=115.31.154.120,14430"
+  ants1_account: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=ANTSACCOUNT;Data Source=103.212.181.33,14430"
+  ants1_auth_email: "no-reply@message-info.me"
+  ants1_LinkLogin: "https://dpt.ants.co.th/login/?"
+  ants1_batchname: xxxx
+  ants1_apikey_taximail: "62b2b64fcf36b541db82be97a85188fe894cfcee"
+  ants1_secretkey_taximail: "6259a052fa60cd26487beab84b233b40925e2999"
+  ants1_Generate_sessionid_url: https://api.taximail.com/v2/user/login
+  ants1_SendemailTaximail_url: https://api.taximail.com/v2/transactional
+  ants1_emailcode: 3
+  ants1_Tempemail: "5"
+
+  ants2_sms: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=ANTSSMS_ENV2;Data Source=115.31.154.120,14430"
+  ants2_account: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=ANTSACCOUNT;Data Source=103.212.181.33,14430"
+  ants2_auth_email: "no-reply@message-info.me"
+  ants2_LinkLogin: "https://ants2-dpt.ants.co.th/login/?"
+  ants2_batchname: xxxx
+  ants2_apikey_taximail: "62b2b64fcf36b541db82be97a85188fe894cfcee"
+  ants2_secretkey_taximail: "6259a052fa60cd26487beab84b233b40925e2999"
+  ants2_Generate_sessionid_url: https://api.taximail.com/v2/user/login
+  ants2_SendemailTaximail_url: https://api.taximail.com/v2/transactional
+  ants2_emailcode: 3
+  ants2_Tempemail: "5"
+
+  ants4_sms: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=ANTSSMS_ENV4;Data Source=115.31.154.120,14430"
+  ants4_account: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=ANTSACCOUNT;Data Source=103.212.181.33,14430"
+  ants4_auth_email: "no-reply@message-info.me"
+  ants4_LinkLogin: "https://report.sms-up.com/login/?"
+  ants4_batchname: xxxx
+  ants4_apikey_taximail: "62b2b64fcf36b541db82be97a85188fe894cfcee"
+  ants4_secretkey_taximail: "6259a052fa60cd26487beab84b233b40925e2999"
+  ants4_Generate_sessionid_url: https://api.taximail.com/v2/user/login
+  ants4_SendemailTaximail_url: https://api.taximail.com/v2/transactional
+  ants4_emailcode: 11
+  ants4_Tempemail: "5"
+
+  axa_sms: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=SMS_AXA;Data Source=115.31.154.120,14430"
+  axa_account: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=ANTSACCOUNT;Data Source=103.212.181.33,14430"
+  axa_auth_email: "no-reply@message-info.me"
+  axa_LinkLogin: "https://axa-dpt.ants.co.th/login/?"
+  axa_batchname: xxxx
+  axa_apikey_taximail: "62b2b64fcf36b541db82be97a85188fe894cfcee"
+  axa_secretkey_taximail: "6259a052fa60cd26487beab84b233b40925e2999"
+  axa_Generate_sessionid_url: https://api.taximail.com/v2/user/login
+  axa_SendemailTaximail_url: https://api.taximail.com/v2/transactional
+  axa_emailcode: 28
+  axa_Tempemail: "5"
+
+  bmw_sms: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=SMS_BMW;Data Source=115.31.154.120,14430"
+  bmw_account: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=ANTSACCOUNT;Data Source=103.212.181.33,14430"
+  bmw_auth_email: "no-reply@message-info.me"
+  bmw_LinkLogin: "https://bmw-dpt.ants.co.th/login/?"
+  bmw_batchname: xxxx
+  bmw_apikey_taximail: "62b2b64fcf36b541db82be97a85188fe894cfcee"
+  bmw_secretkey_taximail: "6259a052fa60cd26487beab84b233b40925e2999"
+  bmw_Generate_sessionid_url: https://api.taximail.com/v2/user/login
+  bmw_SendemailTaximail_url: https://api.taximail.com/v2/transactional
+  bmw_emailcode: 24
+  bmw_Tempemail: "5"
+
+  promotech_sms: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=ENV_PROMOTECH;Data Source=115.31.154.120,14430"
+  promotech_account: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=ANTSACCOUNT;Data Source=103.212.181.33,14430"
+  promotech_auth_email: "no-reply@message-info.me"
+  promotech_LinkLogin: "https://env-promotech-dpt.ants.co.th/login/?"
+  promotech_batchname: xxxx
+  promotech_apikey_taximail: "62b2b64fcf36b541db82be97a85188fe894cfcee"
+  promotech_secretkey_taximail: "6259a052fa60cd26487beab84b233b40925e2999"
+  promotech_Generate_sessionid_url: https://api.taximail.com/v2/user/login
+  promotech_SendemailTaximail_url: https://api.taximail.com/v2/transactional
+  promotech_emailcode: 20
+  promotech_Tempemail: "5"
+
+  hospital_sms: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=ANTSSMS_Hospital;Data Source=119.63.71.113,14430"
+  hospital_account: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=ANTSACCOUNT;Data Source=103.212.181.33,14430"
+  hospital_auth_email: "no-reply@message-info.me"
+  hospital_LinkLogin: "https://hosp-dpt.ants.co.th/login/?"
+  hospital_batchname: xxxx 
+  hospital_apikey_taximail: "62b2b64fcf36b541db82be97a85188fe894cfcee" 
+  hospital_secretkey_taximail: "6259a052fa60cd26487beab84b233b40925e2999" 
+  hospital_Generate_sessionid_url: https://api.taximail.com/v2/user/login 
+  hospital_SendemailTaximail_url: https://api.taximail.com/v2/transactional 
+  hospital_emailcode: 14 
+  hospital_Tempemail: "5" 
+  closeLog: "0" 
+# ===========================================================================
+imagePullSecrets: 
+  enabled: true 
+  createSecret: 
+    registry: registry.ants.co.th 
+    username: admin
+    password: K1f8kmqOB7xO64nv1VR6z9h3F
+# ===========================================================================
+resources: {}
+volumes:
+  enabled: true
+  volume:
+    - name: sms-batchsend-mailalert-logs
+      hostPath:
+        path: /mnt/data/logs/devcenter-batchsendemail-alert-creditbalance
+        type: DirectoryOrCreate
+  volumeMounts:
+    - name: sms-batchsend-mailalert-logs
+      mountPath: /app/logs/sms-batchsend-mailalert-container

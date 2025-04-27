@@ -1,0 +1,37 @@
+kind: Deployment
+replicaCount: 1
+name: sms-apidr
+image:
+  repository: registry.ants.co.th/apps/sms/sms-apidr
+  tag: dev-2e3414fe50e6fe133cfc0683ffaa84cf87ce5f0a
+  pullPolicy: IfNotPresent
+  commandEnabled: false
+# ===========================================================================
+service:
+  enabled: true
+  internalPort: 80
+  externalPort: 80
+appEnv:  
+  RedisConnect: "redis-dr-true-master.database.svc.cluster.local:6379"
+  RedisKey: "NXMLID:"
+  closeLog: "0"
+# ===========================================================================
+imagePullSecrets:
+  enabled: true
+  createSecret: 
+    registry: registry.ants.co.th
+    username: admin
+    password: K1f8kmqOB7xO64nv1VR6z9h3F
+# ===========================================================================
+resources: {}
+volumes:
+  enabled: true
+  volume:
+    - name: apidr-logs
+      hostPath:
+        path: /mnt/data/logs/dev-devcenter-app-apidr
+        type: DirectoryOrCreate
+  volumeMounts:
+    - name: apidr-logs
+      mountPath: /app/logs/apidr-container
+

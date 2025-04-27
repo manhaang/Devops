@@ -1,0 +1,36 @@
+kind: Deployment
+replicaCount: 1
+name: sms-test-connection-db
+image:
+  repository: registry.ants.co.th/apps/sms/sms-test-connection-db
+  tag: prod-a8f9a3631681a6152341e88c41a29d0e57e84ae6
+  pullPolicy: IfNotPresent
+  commandEnabled: false
+# ===========================================================================
+service:
+  enabled: true
+  internalPort: 80
+  externalPort: 80
+appEnv: 
+  
+# ===========================================================================
+imagePullSecrets:
+  enabled: true
+  createSecret: 
+    registry: registry.ants.co.th
+    username: admin
+    password: K1f8kmqOB7xO64nv1VR6z9h3F
+# ===========================================================================
+resources: {}
+volumes:
+  enabled: true
+  volume:
+    - name: test-connection-db-logs
+      hostPath:
+        path: /mnt/data/logs/devcenter-test-connection-db
+        type: DirectoryOrCreate
+  volumeMounts:
+    - name: test-connection-db-logs
+      mountPath: /app/logs/test-connection-db-container
+
+      

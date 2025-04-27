@@ -1,0 +1,76 @@
+kind: Deployment
+replicaCount: 1
+name: sms-batchsend-mailalert
+image:
+  repository: registry.ants.co.th/apps/sms/sms-batchsend-mailalert
+  tag: dev-f305e8e7c26e9a88e312d313c640e792642e27ce
+  pullPolicy: IfNotPresent
+  commandEnabled: false
+# ===========================================================================
+service:
+  enabled: true
+  internalPort: 80
+  externalPort: 80
+appEnv: 
+  Interval: "3000"
+
+  EnvSelection: "ants1 axa"
+
+  dev_sms: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=SMS_KUBE;Data Source=210.1.61.185,14430"
+  dev_account: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=ACCOUNT_KUBE;Data Source=210.1.61.185,14430"
+  
+  dev_auth_email: "no-reply@message-info.me"
+  dev_LinkLogin: "https://sms-downloadreport-web.ants.co.th/login/?"
+  dev_batchname: xxxx
+  dev_apikey_taximail: "62b2b64fcf36b541db82be97a85188fe894cfcee"
+  dev_secretkey_taximail: "6259a052fa60cd26487beab84b233b40925e2999"
+  dev_Generate_sessionid_url: https://api.taximail.com/v2/user/login
+  dev_SendemailTaximail_url: https://api.taximail.com/v2/transactional
+  dev_emailcode: 5
+  dev_Tempemail: "5"
+
+  ants1_sms: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=SMS_KUBE;Data Source=210.1.61.185,14430"
+  ants1_account: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=ACCOUNT_KUBE;Data Source=210.1.61.185,14430"
+
+  ants1_auth_email: "no-reply@message-info.me"
+  ants1_LinkLogin: "https://sms-downloadreport-web.ants.co.th/login/?"
+  ants1_batchname: xxxx
+  ants1_apikey_taximail: "62b2b64fcf36b541db82be97a85188fe894cfcee"
+  ants1_secretkey_taximail: "6259a052fa60cd26487beab84b233b40925e2999"
+  ants1_Generate_sessionid_url: https://api.taximail.com/v2/user/login
+  ants1_SendemailTaximail_url: https://api.taximail.com/v2/transactional
+  ants1_emailcode: 3
+  ants1_Tempemail: "5"
+
+  axa_sms: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=SMS_KUBE_PROD_ENV1;Data Source=210.1.61.185,14430"
+  axa_account: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=ACCOUNT_KUBE;Data Source=210.1.61.185,14430"
+
+  axa_auth_email: "no-reply@message-info.me"
+  axa_LinkLogin: "https://sms-downloadreport-web.ants.co.th/login/?"
+  axa_batchname: xxxx
+  axa_apikey_taximail: "62b2b64fcf36b541db82be97a85188fe894cfcee"
+  axa_secretkey_taximail: "6259a052fa60cd26487beab84b233b40925e2999"
+  axa_Generate_sessionid_url: https://api.taximail.com/v2/user/login
+  axa_SendemailTaximail_url: https://api.taximail.com/v2/transactional
+  axa_emailcode: 24
+  axa_Tempemail: "5"
+  closeLog: "0"
+# ===========================================================================
+imagePullSecrets:
+  enabled: true
+  createSecret: 
+    registry: registry.ants.co.th
+    username: admin
+    password: K1f8kmqOB7xO64nv1VR6z9h3F
+# ===========================================================================
+resources: {}
+volumes:
+  enabled: true
+  volume:
+    - name: batchsend-mailalert-logs
+      hostPath:
+        path: /mnt/data/logs/dev-devcenter-batchsendemail-alert-creditbalance
+        type: DirectoryOrCreate
+  volumeMounts:
+    - name: batchsend-mailalert-logs
+      mountPath: /app/logs/batchsend-mailalert-container

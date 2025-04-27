@@ -1,0 +1,71 @@
+kind: Deployment
+replicaCount: 1
+name: sms-import-schedule
+image:
+  repository: registry.ants.co.th/apps/sms/sms-import-schedule
+  tag: prod-46524d4a3118974fedec9ca6fed0ee0443ee4626
+  pullPolicy: IfNotPresent
+  commandEnabled: false
+# ===========================================================================
+service:
+  enabled: true
+  internalPort: 80
+  externalPort: 80
+appEnv: 
+  general-sleep: "3000"
+  general-batchname: "IMPORT SCHEDULE"
+  task-env: "5"
+  task-size-env: "0"
+  dbAccount: "Data Source=103.212.181.33,14430;Initial Catalog=ANTSACCOUNT;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'"
+
+  rabbitHost: "rabbitmqms.database.svc.cluster.local"
+  rabbitUser: "user"
+  rabbitPass: "qKDOW4AFalq1KtV8"
+  rabbitQueueTrueIsGame: "2325131101,2325131102,2325131103,2325131105,2325131106,2325131107,2325131108"
+  rabbitQueueTrue: "2317451107,2317451111,2317451112,2317451100,2317451101,2317451102,2317451104"
+  rabbitQueueDtac: "service01"
+  rabbitExchange: "amq.direct"
+
+  # list env and connection string start
+  listDb: "hospital ants2 ants4 axa bmw ants1 promotech"
+  ants1: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=ANTSSMS;Data Source=115.31.154.120,14430"
+  shorten-ants1: "Data Source=115.31.154.120,14430;Initial Catalog=SHORTEN;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'"
+
+  ants2: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=ANTSSMS_ENV2;Data Source=115.31.154.120,14430"
+  shorten-ants2: "Data Source=115.31.154.120,14430;Initial Catalog=SHORTEN_ENV2;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'"
+
+  ants4: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=ANTSSMS_ENV4;Data Source=115.31.154.120,14430"
+  shorten-ants4: "Data Source=115.31.154.120,14430;Initial Catalog=SHORTEN_ENV4;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'"
+
+  axa: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=SMS_AXA;Data Source=115.31.154.120,14430"
+  shorten-axa: "Data Source=115.31.154.120,14430;Initial Catalog=SHORTEN_AXA;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'"
+
+  bmw: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=SMS_BMW;Data Source=115.31.154.120,14430"
+  shorten-bmw: "Data Source=115.31.154.120,14430;Initial Catalog=SHORTEN_BMW;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'"
+
+  hospital: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=ANTSSMS_Hospital;Data Source=119.63.71.113,14430"
+  shorten-hospital: "Data Source=119.63.71.113,14430;Initial Catalog=SHORTEN_Hospital;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'"
+
+  promotech: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=ENV_PROMOTECH;Data Source=115.31.154.120,14430"
+  shorten-bmw: "Data Source=115.31.154.120,14430;Initial Catalog=SHORTEN_BMW;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'"
+  closeLog: "0"
+  # list env and connection string end
+# ===========================================================================
+imagePullSecrets:
+  enabled: true
+  createSecret: 
+    registry: registry.ants.co.th
+    username: admin
+    password: K1f8kmqOB7xO64nv1VR6z9h3F
+# ===========================================================================
+resources: {}
+volumes:
+  enabled: true
+  volume:
+    - name: import-schedule-logs
+      hostPath:
+        path: /mnt/data/logs/devcenter-import-schedule
+        type: DirectoryOrCreate
+  volumeMounts:
+    - name: import-schedule-logs
+      mountPath: /app/logs/import-schedule-container

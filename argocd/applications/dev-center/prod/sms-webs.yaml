@@ -1,0 +1,36 @@
+kind: Deployment
+replicaCount: 1
+name: sms-webs
+image:
+  repository: registry.ants.co.th/apps/sms/sms-webs
+  tag: prod-c8949f1d6abdc41dc67ce5db64c50b53cd94fab8
+  pullPolicy: IfNotPresent
+  commandEnabled: false
+  env:
+    - name: TZ
+      value: "Asia/Bangkok"
+# ===========================================================================
+service:
+  enabled: true
+  internalPort: 80
+  externalPort: 80
+appEnv: 
+imagePullSecrets:
+  enabled: true
+  createSecret: 
+    registry: registry.ants.co.th
+    username: admin
+    password: K1f8kmqOB7xO64nv1VR6z9h3F
+# ===========================================================================
+resources: {}
+
+volumes:
+  enabled: true
+  volume:
+    - name: webs-logs
+      hostPath:
+        path: /mnt/data/logs/devcenter-app-webs
+        type: DirectoryOrCreate
+  volumeMounts:
+    - name: webs-logs
+      mountPath: /app/logs/webs-container

@@ -1,0 +1,56 @@
+kind: Deployment
+replicaCount: 1
+name: sms-dr-center-create-transaction-service01
+image:
+  repository: registry.ants.co.th/apps/sms/sms-dr-center-create-transaction
+  tag: dev-93429d5202cf5f88ec9c317278b0668da16bfe05
+  pullPolicy: IfNotPresent
+  commandEnabled: false
+# ===========================================================================
+service:
+  enabled: true
+  internalPort: 80
+  externalPort: 80
+appEnv: 
+  BatchSize: "50000"
+  MongoConnectSend: "mongodb://210.1.61.187:37017"
+  MongoDataBaseNameSend: "logdb"
+  MongoCollectionNameSend: "service01"
+  MongoConnectDR_True: "mongodb://210.1.61.187:37017"
+  MongoDataBaseNameDR_True: "logdb"
+  MongoCollectionNameDR_True: "deliveryreport_true"
+  MongoConnectDR_Dtac: "mongodb://210.1.61.187:37017"
+  MongoDataBaseNameDR_Dtac: "logdb"
+  MongoCollectionNameDR_Dtac: "deliveryreport_dtac"
+  timers: "10000"
+  Interval: "10000"
+  batchname: "batch DR Center Create Transaction"
+  ServerFilePath: "C:\\DeliveryPromoLog\\"
+  GATEWAYIDTRUE: "1"
+  GATEWAYIDDTAC: "1"
+  DatabaseConnections: "dev ants1 axa bmw"
+  dev: "Data Source=210.1.61.185,14430;Initial Catalog=SMS_KUBE;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'"
+  ants1: "Data Source=210.1.61.185,14430;Initial Catalog=SMS_KUBE;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'"
+  axa: "Data Source=210.1.61.185,14430;Initial Catalog=SMS_KUBE_PROD_ENV1;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'"
+  bmw: "Data Source=210.1.61.185,14430;Initial Catalog=SMS_KUBE_PROD_ENV2;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'"
+  DOTNET_ENVIRONMENT: Production
+  closeLog: "0"
+# ===========================================================================
+imagePullSecrets:
+  enabled: true
+  createSecret: 
+    registry: registry.ants.co.th
+    username: admin
+    password: K1f8kmqOB7xO64nv1VR6z9h3F
+# ===========================================================================
+resources: {}
+volumes:
+  enabled: true
+  volume:
+    - name: sms-dr-center-create-transaction-logs
+      hostPath:
+        path: /mnt/data/logs/dev-devcenter-dr-center-create-transaction-service01
+        type: DirectoryOrCreate
+  volumeMounts:
+    - name: sms-dr-center-create-transaction-logs
+      mountPath: /app/logs/sms-dr-center-create-transaction-container

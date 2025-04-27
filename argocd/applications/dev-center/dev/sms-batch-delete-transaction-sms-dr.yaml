@@ -1,0 +1,47 @@
+kind: Deployment
+replicaCount: 1
+name: sms-batch-delete-transaction-sms-dr
+image:
+  repository: registry.ants.co.th/apps/sms/sms-batch-delete-transaction-sms-dr
+  tag: dev-77adc768acfd329462769b3259074d1e55417062
+  pullPolicy: IfNotPresent
+  commandEnabled: false
+# ===========================================================================
+service:
+  enabled: true
+  internalPort: 80
+  externalPort: 80
+appEnv: 
+  BatchSize: "50000"
+  MongoConnectSend: "mongodb://210.1.61.187:37017"
+  MongoDataBaseNameSend: "logdb"
+  MongoCollectionNameSend: "testRabbit"
+  MongoConnectDR_True: "mongodb://210.1.61.187:37017"
+  MongoDataBaseNameDR_True: "logdb"
+  MongoCollectionNameDR_True: "deliveryreport_true"
+  MongoConnectDR_Dtac: "mongodb://210.1.61.187:37017"
+  MongoDataBaseNameDR_Dtac: "logdb"
+  MongoCollectionNameDR_Dtac: "deliveryreport_dtac"
+  timers: "60000"
+  Interval: "60000"
+  batchname: "batch-delete-transaction-sms-dr"
+  closeLog: "0"
+# ===========================================================================
+imagePullSecrets:
+  enabled: true
+  createSecret: 
+    registry: registry.ants.co.th
+    username: admin
+    password: K1f8kmqOB7xO64nv1VR6z9h3F
+# ===========================================================================
+resources: {}
+volumes:
+  enabled: true
+  volume:
+    - name: sms-batch-delete-transaction-sms-dr-logs
+      hostPath:
+        path: /mnt/data/logs/dev-devcenter-batch-delete-transaction-sms-dr
+        type: DirectoryOrCreate
+  volumeMounts:
+    - name: sms-batch-delete-transaction-sms-dr-logs
+      mountPath: /app/logs/sms-batch-delete-transaction-sms-dr-container

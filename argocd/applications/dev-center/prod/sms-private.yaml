@@ -1,0 +1,189 @@
+kind: Deployment
+replicaCount: 1
+name: sms-private
+image:
+  repository: registry.ants.co.th/apps/sms/sms-private
+  tag: prod-48b444482c8a4f23421134a7f5a2aaff2561c62b
+  pullPolicy: IfNotPresent
+  commandEnabled: false
+# ===========================================================================
+service:
+  enabled: true
+  internalPort: 80
+  externalPort: 80
+appEnv: 
+  AllowedHosts: "*"
+  accountDbCenter: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=ANTSACCOUNT;Data Source=103.212.181.33,14430"
+  accountDbEntities: "metadata=res://*/ANTNotifyModel.csdl|res://*/ANTNotifyModel.ssdl|res://*/ANTNotifyModel.msl;provider=System.Data.SqlClient;provider connection string=&quot;data source=103.212.181.33,14430;initial catalog=ANTSACCOUNT;persist security info=True;user id=sa;password='P@ssw0rd;';multipleactiveresultsets=True;application name=EntityFramework&quot;"
+  logCenterDb: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=LOG_CENTER;Data Source=119.63.68.220,14330"
+
+  smsCreditBalanceDb: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=SMSCREDITBALANCE;Data Source=210.1.61.185,14431"
+  backListDb: "Data Source=103.212.181.40,14430;Initial Catalog=BLACKLIST;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'"
+
+  reportCenter: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=REPORT_CENTER;Data Source=103.212.181.40,14430"
+  tokenAccountDb: "Server='103.212.181.33,14430';Database='ANTSACCOUNT';User Id='sa';Password='P@ssw0rd;';TrustServerCertificate=True;"
+
+
+  ants1: "Server=115.31.154.120,14430;Database=ANTSSMS;User Id=sa;Password='P@ssw0rd;';Encrypt=True;TrustServerCertificate=True;"
+  smsReportTempDb_ants1: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=SMS_REPORT_TEMP;Data Source=115.31.154.120,14430"
+  otpDb_ants1: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=ANTSOTPV2;Data Source=115.31.154.120,14430"
+
+  ants2: "Server=115.31.154.120,14430;Database=ANTSSMS_ENV2;User Id=sa;Password='P@ssw0rd;';Encrypt=True;TrustServerCertificate=True;"
+  smsReportTempDb_ants2: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=SMS_REPORT_TEMP_ENV2;Data Source=115.31.154.120,14430"
+  otpDb_ants2: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=ANTSOTP_ENV2;Data Source=115.31.154.120,14430"
+
+  ants4: "Server=115.31.154.120,14430;Database=ANTSSMS_ENV4;User Id=sa;Password='P@ssw0rd;';Encrypt=True;TrustServerCertificate=True;"
+  smsReportTempDb_ants4: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=SMS_REPORT_TEMP_ENV4;Data Source=115.31.154.120,14430"
+  otpDb_ants4: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=ANTSOTP_ENV4;Data Source=115.31.154.120,14430"
+
+  axa: "Server=115.31.154.120,14430;Database=SMS_AXA;User Id=sa;Password='P@ssw0rd;';Encrypt=True;TrustServerCertificate=True;"
+  smsReportTempDb_axa: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=SMS_REPORT_TEMP_AXA;Data Source=115.31.154.120,14430"
+  otpDb_axa: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=OTP_AXA_V2;Data Source=115.31.154.120,14430"
+
+  bmw: "Server=115.31.154.120,14430;Database=SMS_BMW;User Id=sa;Password='P@ssw0rd;';Encrypt=True;TrustServerCertificate=True;"
+  smsReportTempDb_bmw: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=SMS_REPORT_TEMP_BMW;Data Source=115.31.154.120,14430"
+  otpDb_bmw: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=OTP_BMW_V2;Data Source=115.31.154.120,14430"
+
+  hospital: "Server=119.63.71.113,14430;Database=ANTSSMS_Hospital;User Id=sa;Password='P@ssw0rd;';TrustServerCertificate=True;"
+  smsReportTempDb_hospital: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=SMS_REPORT_TEMP_Hospital;Data Source=119.63.71.113,14430"
+  otpDb_hospital: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=ANTSOTPV2_hospital;Data Source=119.63.71.113,14430"
+
+  promotech: "Server=115.31.154.120,14430;Database=ENV_PROMOTECH;User Id=sa;Password='P@ssw0rd;';Encrypt=True;TrustServerCertificate=True;"
+  smsReportTempDb_promotech: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=SMS_REPORT_TEMP_PROMOTECH;Data Source=115.31.154.120,14430"
+  otpDb_promotech: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=ANTSOTP_PROMOTECH;Data Source=115.31.154.120,14430"
+
+  shortenDb_ants1: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=SHORTEN;Data Source=115.31.154.120,14430"
+  shortenDb_ants2: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=SHORTEN_ENV2;Data Source=115.31.154.120,14430"
+  shortenDb_ants4: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=SHORTEN_ENV4;Data Source=115.31.154.120,14430"
+  shortenDb_axa: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=SHORTEN_AXA;Data Source=115.31.154.120,14430"
+  shortenDb_bmw: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=SHORTEN_BMW;Data Source=115.31.154.120,14430"
+  shortenDb_hospital: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=SHORTEN_Hospital;Data Source=119.63.71.113,14430"
+  shortenDb_promotech: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=SHORTEN_PROMOTECH;Data Source=115.31.154.120,14430"
+
+  MongoDBConnection_ants1: "mongodb://admin:P%40ssw0rd%3B@223.27.247.217:37010/logdb?authSource=admin&connectTimeoutMS=60000&serverSelectionTimeoutMS=60000&collection=transactions_MonthlyCommu"
+  MongoDBConnection_ants2: "mongodb://admin:P%40ssw0rd%3B@223.27.247.217:37010/ants2?authSource=admin&connectTimeoutMS=60000&serverSelectionTimeoutMS=60000&collection=transactions_MonthlyCommu"
+  MongoDBConnection_ants4: "mongodb://admin:P%40ssw0rd%3B@223.27.247.217:37010/ants4?authSource=admin&connectTimeoutMS=60000&serverSelectionTimeoutMS=60000&collection=transactions_MonthlyCommu"
+  MongoDBConnection_axa: "mongodb://admin:P%40ssw0rd%3B@223.27.247.217:37010/axa?authSource=admin&connectTimeoutMS=60000&serverSelectionTimeoutMS=60000&collection=transactions_MonthlyCommu"
+  MongoDBConnection_bmw: "mongodb://admin:P%40ssw0rd%3B@223.27.247.217:37010/bmw?authSource=admin&connectTimeoutMS=60000&serverSelectionTimeoutMS=60000&collection=transactions_MonthlyCommu"
+  MongoDBConnection_hospital: "mongodb://admin:P%40ssw0rd%3B@223.27.247.217:37010/hospital?authSource=admin&connectTimeoutMS=60000&serverSelectionTimeoutMS=60000&collection=transactions_MonthlyCommu"
+  MongoDBConnection_promotech: "mongodb://admin:P%40ssw0rd%3B@223.27.247.217:37010/promotech?authSource=admin&connectTimeoutMS=60000&serverSelectionTimeoutMS=60000&collection=transactions_MonthlyCommu"
+  # //use in EmailBiz.cs
+  apikey_taximail: "62b2b64fcf36b541db82be97a85188fe894cfcee"
+  secretkey_taximail: "6259a052fa60cd26487beab84b233b40925e2999"
+  Generate_sessionid_url: "https://api.taximail.com/v2/user/login"
+  SendemailTaximail_url: "https://api.taximail.com/v2/transactional"
+  emailto: "support@ants.co.th"
+  auth_email: "security@ants.co.th"
+  auth_passowrd: "Ants2015$"
+  GetFileEcm_Url: "http://27.254.150.101:51010/api/file/getfile/"
+  GetFileNewEcm_Url: "http://119.63.68.220:51010/api/file/getfile/"
+  # // upload file
+  auth_newecm: "smsapi:P@ssw0rd"
+  UploadNewEcm_Url: "http://119.63.68.220:51010/api/file/uploadfile_formdata"
+  UploadEcm_Url: "http://119.63.68.220:51010/api/file/getfile/"
+  # // OTP
+  UrlOTP: "https://otp.ants.co.th"
+  urlTransactionInfo: "http://119.63.68.215:9100/createTransactionInfo"
+  urlConection: "http://103.212.181.11:3002/getConfig/"
+  gateway_otp: "http://103.212.181.33:2020/SMSGateway/true"
+  gateway_otp_user: "2317451103"
+  gateway_otp_pass: "GnSm8392"
+  service_id: "2317451103"
+  charge_number: "40001308"
+  
+  # // Files
+  Filemaxlength: "10485760"
+  # // FTP
+  urltestftpconnect: "http://103.212.181.11:4101/TestFtpConnect"
+  # // QuickSend, using in SMSAPIBiz.cs
+  contentlength: "1600"
+  send_sms_api: "1"
+  urlcreateSmsReqQuickSend: "http://119.63.68.215:4005/createSmsReqQuickSend"
+  # // ApiDeleteRedis
+  ApiDeleteRedis: "https://sms-apideleteredis-prod.ants.co.th/api/redis/del"
+  enpointUrl_Token: "https://gettoken-dev-center.ants.co.th/api/GetToken/login"
+  # // Shorten URL domain
+  shortenUrlDomain: "c0c.me/"
+  # // config อยู่ใน File ~/business/v1/SMSAPIBiz.cs
+  RedisConnect: "unuse"
+  RedisKey: "unuse"
+  RedisConnectsend: "unuse"
+  RedisSend: "unuse"
+  Notify_Url: "http://168.63.255.118:51014/SandBox/MO"
+  LINK_RESET_PASSWORD_EXPIRE: "240"
+  ants1_DomailFogetPwd: "https://forgot-password.ants.co.th/#/forgetpwd/code?code="
+  ants2_DomailFogetPwd: "https://ants2-forgot-password.ants.co.th/#/forgetpwd/code?code="
+  ants4_DomailFogetPwd: "https://forgot-password.sms-up.com/#/forgetpwd/code?code="
+  axa_DomailFogetPwd: "https://axa-forgot-password.ants.co.th/#/forgetpwd/code?code="
+  bmw_DomailFogetPwd: "https://bmw-forgot-password.ants.co.th/#/forgetpwd/code?code="
+  hospital_DomailFogetPwd: "https://forget-pw-hosp.ants.co.th/#/forgetpwd/code?code="
+  promotech_DomailFogetPwd: "https://env-promotech-forgot-password.ants.co.th/#/forgetpwd/code?code="
+  
+  gateway_creditbalance: "http://13.76.244.175:3002/getCreditV2"
+  BLK.MESSAGE: " ต้องการยกเลิก SMS จากทางเราคลิก https://block.message-info.me/"
+  expireMinute: "120"
+  limitTotalMongo: "200000"
+  nodeApiURL: "https://103.212.181.11:3002"
+  RegisterUserGateway: "9"
+  RegisterUserAccountCost: "0.20"
+  RegisterUserAccountErrorCount: "3"
+  RegisterUserAccountWebBlockSecond: "180"
+  RegisterUserAccountAPIErrorCount: "3"
+  RegisterUserAccountAPIBlockSecond: "180"
+  RegisterUserParentAccount: "1"
+  RegisterUserConnection: "11"
+  RegisterUserAPIConnection: "12"
+  RegisterUserAccountLevel: "1"
+  RegisterUserLevel: "1"
+  RegisterUserStatus: "1"
+  RegisterUserPaytype: "1"
+  RecaptchaSecret: "6LcO21YdAAAAACbLGqJInpy9OAhfz27g2bMRTmJ4"
+  OmiseAfterChargeBaseReturnUrl: "1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed"
+  omisekey: "skey_test_5z8gcel4zr2uawdixar"
+  omiseExpireQr: "5"
+  paymentGateWayApi: "https://dev-papigateway.ants.co.th/"
+  paymentGateWayApiToken: "1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed"
+  Updateused_discountcode_Url: "https://jaspalapi-pre.azurewebsites.net/Discount/checkdiscountcode?code="
+  Get_discountcode_Url: "https://jaspalapi-pre.azurewebsites.net/Discount/checkdiscountcode?code="
+  otcId: "fe57607c-a5a2-4732-b671-37eba5533dfe"
+  otpUser: "user1"
+  otpPass: "P@ssw0rd"
+  callbackUrlPaymentGateway: "https://sms-private-dev.ants.co.th/"
+  #MongoDBConnection: "mongodb://admin:P%40ssw0rd%3B@223.27.247.217:37010/logdb?authSource=admin&connectTimeoutMS=60000&serverSelectionTimeoutMS=60000&collection=transactions_MonthlyCommu"
+ 
+  sms_tran_type: "1"
+  isOperator: "TRUE"
+  rabbitHost: "rabbitmqms.database.svc.cluster.local" #"rabbitmqms.database.svc.cluster.local"
+  rabbitPort: "5672" # 15672
+  rabbitUser: "user"
+  rabbitPass: "qKDOW4AFalq1KtV8" # "vljjJhH9JhnFlSIF"
+  rabbitQueueTrueIsGame: "2325131101"
+  rabbitQueueTrue: "2317451107"
+  rabbitQueueDtac: "service01"
+  ENV_KEY: "dev"
+  encrypt-key: "db3OIsj+BXE9NZDy0t8W3TcNekrF+2d/1sFnWG4HnV8TZY30iTOdtVWJG8abWvB1GlOgJuQZdcF2Luqm/hccMw=="
+  DOTNET_USE_POLLING_FILE_WATCHER: "1"
+  closeLog: "1"
+imagePullSecrets:
+  enabled: true
+  createSecret: 
+    registry: registry.ants.co.th
+    username: admin
+    password: K1f8kmqOB7xO64nv1VR6z9h3F
+# ===========================================================================
+resources: {}
+
+volumes:
+  enabled: true
+  volume:
+    - name: private-logs
+      hostPath:
+        path: /mnt/data/logs/devcenter-app-private
+        type: DirectoryOrCreate
+  volumeMounts:
+    - name: private-logs
+      mountPath: /app/logs/private-container
+# =================================TIMEZONE==========================================
+env:
+  - name: TZ
+    value: "Asia/Bangkok"

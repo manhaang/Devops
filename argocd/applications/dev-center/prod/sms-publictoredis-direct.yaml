@@ -1,0 +1,109 @@
+kind: Deployment
+replicaCount: 1
+name: sms-publictoredis-direct
+image:
+  repository: registry.ants.co.th/apps/sms/sms-publictoredis
+  tag: prod-87b5aa04768914aceca014da80bd778b6a968d2a
+  pullPolicy: IfNotPresent
+  commandEnabled: false
+# ===========================================================================
+service:
+  enabled: true
+  internalPort: 80
+  externalPort: 80
+appEnv: 
+  general-contentlength: "1600"
+  general-send-sms-api: 1
+  general-sleep: "5000"
+  general-roundsize: "40000"
+  general-domain-shorten: "c0c.me/"
+  general-linkbacklist: " ต้องการยกเลิก SMS จากทางเราคลิก https://block.message-info.me/"
+  general-smstrantype: "402"
+  general-isOperator: "TRUE"
+  # setting general
+
+  # setting rabbitmq start
+  rabbit-host: "rabbitmqms.database.svc.cluster.local" # "rabbitmqms.database.svc.cluster.local" #'10.43.56.255' #""
+  rabbit-port: "5672" # 15672
+  rabbit-user: "user"
+  rabbit-password: "qKDOW4AFalq1KtV8" #"vljjJhH9JhnFlSIF"
+  rabbit-queue-true-isgame: "2325131104"
+  rabbit-queue-true: "2317451103"
+  rabbit-queue-dtac: "service01"
+  # setting rabbitmq end
+
+  # setting connectionstring start
+  con-account: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=ANTSACCOUNT;Data Source=103.212.181.33,14430"
+  con-blacklist: "Data Source=103.212.181.40,14430;Initial Catalog=BLACKLIST;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'"
+  con-exception: "Server=tcp:antsdb.database.windows.net,1433;Initial Catalog=LOGS_DB;Persist Security Info=False;User ID=ants_sa;Password='P@ssw0rd;';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=180;"
+  # setting connectionstring end
+
+  # list env and connection string start
+  listDb: "ants1 ants2" #  ants2 ants4 axa bmw hospital promotech
+  ants1: "Server=115.31.154.120,14430;Database=ANTSSMS;User Id=sa;Password='P@ssw0rd;';TrustServerCertificate=True;"
+  shorten-ants1: "Server=115.31.154.120,14430;Database=SHORTEN;User Id=sa;Password='P@ssw0rd;';TrustServerCertificate=True;"
+  shorten_domain-ants1 : "c0c.me/"
+
+  ants2: "Server=115.31.154.120,14430;Database=ANTSSMS_ENV2;User Id=sa;Password='P@ssw0rd;';TrustServerCertificate=True;"
+  shorten-ants2: "Server=115.31.154.120,14430;Database=SHORTEN_ENV2;User Id=sa;Password='P@ssw0rd;';TrustServerCertificate=True;"
+  shorten_domain-ants2 : "c5c.me/"
+
+  ants4: "Server=115.31.154.120,14430;Database=ANTSSMS_ENV4;User Id=sa;Password='P@ssw0rd;';TrustServerCertificate=True;"
+  shorten-ants4: "Server=115.31.154.120,14430;Database=SHORTEN_ENV4;User Id=sa;Password='P@ssw0rd;';TrustServerCertificate=True;"
+  shorten_domain-ants4 : "tassu.xyz/"
+
+  axa: "Server=115.31.154.120,14430;Database=SMS_AXA;User Id=sa;Password='P@ssw0rd;';TrustServerCertificate=True;"
+  shorten-axa: "Server=115.31.154.120,14430;Database=SHORTEN_AXA;User Id=sa;Password='P@ssw0rd;';TrustServerCertificate=True;"
+  shorten_domain-axa : "a1x.me/"
+
+  bmw: "Server=115.31.154.120,14430;Database=SMS_BMW;User Id=sa;Password='P@ssw0rd;';TrustServerCertificate=True;"
+  shorten-bmw: "Server=115.31.154.120,14430;Database=SHORTEN_BMW;User Id=sa;Password='P@ssw0rd;';TrustServerCertificate=True;"
+  shorten_domain-bmw : "b1w.me/"
+
+  hospital: "Server=119.63.71.113,14430;Database=ANTSSMS_Hospital;User Id=sa;Password='P@ssw0rd;';TrustServerCertificate=True;"
+  shorten-hospital: "Server=119.63.71.113,14430;Database=SHORTEN_Hospital;User Id=sa;Password='P@ssw0rd;';TrustServerCertificate=True;"
+  shorten_domain-hospital : "h.c0c.me/"
+
+  promotech: "Server=115.31.154.120,14430;Database=ENV_PROMOTECH;User Id=sa;Password='P@ssw0rd;';TrustServerCertificate=True;"
+  shorten-promotech: "Server=115.31.154.120,14430;Database=SHORTEN_PROMOTECH;User Id=sa;Password='P@ssw0rd;';TrustServerCertificate=True;"
+  shorten_domain-promotech : "p.c0c.me/"
+  # list env and connection string end
+
+  # setting redis start
+  redis-key: "PUBAPI_SMSREQ:"
+  redis-limit-send: "redis-limitsend-master.database.svc.cluster.local:6379"
+  redis-ants1: "redis-public-ants-direct-master.database.svc.cluster.local:6379"
+  redis-ants2: "redis-public-ants2-direct-master.database.svc.cluster.local:6379"
+  redis-ants4: "redis-public-ants4-direct-master.database.svc.cluster.local:6379"
+  redis-axa: "redis-public-ants-direct-master.database.svc.cluster.local:6379"
+  redis-bmw: "redis-public-ants-direct-master.database.svc.cluster.local:6379"
+  redis-promotech: "redis-public-promotech-direct-master.database.svc.cluster.local:6379"
+  redis-hospital: "redis-public-ants-direct-master.database.svc.cluster.local:6379"
+  # setting redis end
+
+  # setting task start
+  task-size-env: 7
+  task-env: 7
+  closeLog: 0
+  # setting task end
+# ===========================================================================
+imagePullSecrets:
+  enabled: true
+  createSecret: 
+    registry: registry.ants.co.th
+    username: admin
+    password: K1f8kmqOB7xO64nv1VR6z9h3F
+# ===========================================================================
+resources: {}
+volumes:
+  enabled: true
+  volume:
+    - name: publictoredis-logs
+      hostPath:
+        path: /mnt/data/logs/devcenter-publictoredis-direct
+        type: DirectoryOrCreate
+  volumeMounts:
+    - name: publictoredis-logs
+      mountPath: /app/logs/publictoredis-container
+
+      

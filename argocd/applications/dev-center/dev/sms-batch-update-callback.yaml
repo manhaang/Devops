@@ -1,0 +1,44 @@
+kind: Deployment
+replicaCount: 1
+name: sms-batch-update-callback
+image:
+  repository: registry.ants.co.th/apps/sms/sms-batch-update-callback
+  tag: dev-58a49e876c6388bbc56f359ac07234267cfd8d5f
+  pullPolicy: IfNotPresent
+  commandEnabled: false
+# ===========================================================================
+service:
+  enabled: true
+  internalPort: 80
+  externalPort: 80
+appEnv: 
+  general-sleep: 60
+  task-env: 2
+  listDb: "ants1 axa"
+  ants1: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=SMS_KUBE;Data Source=210.1.61.185,14430"
+  axa: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=SMS_KUBE_PROD_ENV1;Data Source=210.1.61.185,14430"
+  bmw: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=SMS_KUBE_PROD_ENV2;Data Source=210.1.61.185,14430"
+  tempdb-ants1: "Data Source=210.1.61.185,14430;Initial Catalog=SMS_REPORT_TEMP;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'"
+  tempdb-axa: "Data Source=210.1.61.185,14430;Initial Catalog=SMS_REPORT_TEMP_ENV1;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'"
+  tempdb-bmw: "Data Source=210.1.61.185,14430;Initial Catalog=SMS_REPORT_TEMP;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'"
+  closeLog: "0"
+# ===========================================================================
+imagePullSecrets:
+  enabled: true
+  createSecret: 
+    registry: registry.ants.co.th
+    username: admin
+    password: K1f8kmqOB7xO64nv1VR6z9h3F
+# ===========================================================================
+resources: {}
+volumes:
+  enabled: true
+  volume:
+    - name: batch-update-callback-logs
+      hostPath:
+        path: /mnt/data/logs/dev-devcenter-batch-update-callback
+        type: DirectoryOrCreate
+  volumeMounts:
+    - name: batch-update-callback-logs
+      mountPath: /app/logs/batch-update-callback-container
+

@@ -1,0 +1,55 @@
+kind: Deployment
+replicaCount: 1
+name: sms-sendsms-true-2317451111
+image:
+  repository: registry.ants.co.th/apps/sms/sms-sendsms
+  tag: prod-d506db373a23e73b2824ab2f338c214a78bc3830
+  pullPolicy: IfNotPresent
+  commandEnabled: false
+# ===========================================================================
+service:
+  enabled: true
+  internalPort: 80
+  externalPort: 80
+appEnv: 
+  RABBITMQ_URI: "amqp://user:qKDOW4AFalq1KtV8@rabbitmqms.database.svc.cluster.local:5672"
+  
+  RABBITMQ_NAME: "2317451111"
+  TPS_LIMIT: "50"
+  MongoConnect: "mongodb://root:J7yWBFyBsJ@mongosend-mongodb.database.svc.cluster.local:27017" #"mongodb://210.1.61.187:37017"
+  MongoDb: "send"
+  MongoCollection: "transaction"
+  shortenUrlDomain: "xxx"
+  DB_SMS: "Server='115.31.154.120,14430';Database='ANTSSMS';User Id='sa';Password='P@ssw0rd;';TrustServerCertificate=True;"
+  DB_SHORTEN: "Server='115.31.154.120,14430';Database='SHORTEN';User Id='sa';Password='P@ssw0rd;';TrustServerCertificate=True;"
+  oper_true_password: "NcM@B6TI5*j8lOi"
+  oper_true_service_id: "2317451111"
+  oper_true_url: "https://bulk.truecorp.co.th"
+  oper_true_short_code: "40002357"
+  oper_true_charge_number: "66938090594"
+  oper_dtac_user: "xx"
+  oper_dtac_password: "xx"
+  oper_dtac_url: "xx"
+  isQuicksend: "0"
+  isTest: "0"
+  DOTNET_USE_POLLING_FILE_WATCHER: "1"
+imagePullSecrets:
+  enabled: true
+  createSecret: 
+    registry: registry.ants.co.th
+    username: admin
+    password: K1f8kmqOB7xO64nv1VR6z9h3F
+# ===========================================================================
+resources: {}
+nodeSelector:
+      kubernetes.io/hostname : data-warehouse-3
+volumes:
+  enabled: true
+  volume:
+    - name: sendsms-logs
+      hostPath:
+        path: /mnt/data/logs/devcenter-sendsms-true-2317451111
+        type: DirectoryOrCreate
+  volumeMounts:
+    - name: sendsms-logs
+      mountPath: /app/logs/sendsms-container

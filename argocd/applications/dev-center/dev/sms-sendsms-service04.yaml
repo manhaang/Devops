@@ -1,0 +1,53 @@
+kind: Deployment
+replicaCount: 1
+name: sms-sendsms04
+image:
+  repository: registry.ants.co.th/apps/sms/sms-sendsms
+  tag: dev-35abe502b83c8ef7e5b64aa39d74e6d09c86fe71
+  pullPolicy: IfNotPresent
+  commandEnabled: false
+# ===========================================================================
+service:
+  enabled: true
+  internalPort: 80
+  externalPort: 80
+appEnv: 
+  RABBITMQ_URI: "amqp://guest:guest@210.1.61.184:5672"
+  RABBITMQ_NAME: "service04"
+  TPS_LIMIT: "200"
+  MongoConnect: "mongodb://210.1.61.187:37017"
+  MongoDb: "logdb"
+  MongoCollection: "service04"
+  shortenUrlDomain: "c0c.ants.co.th/"
+  DB_SMS: "Server='210.1.61.185,14430';Database='SMS_KUBE';User Id='sa';Password='P@ssw0rd;';TrustServerCertificate=True;"
+  DB_SHORTEN: "Server='210.1.61.185,14430';Database='SHORTEN';User Id='sa';Password='P@ssw0rd;';TrustServerCertificate=True;"
+  oper_true_password: "NcM@BXk5hRaT^08"
+  oper_true_service_id: "2317451109"
+  oper_true_url: "https://bulk.truecorp.co.th"
+  oper_true_short_code: "40002188"
+  oper_true_charge_number: "66938090594"
+  oper_dtac_user: "xx"
+  oper_dtac_password: "xx"
+  oper_dtac_url: "xx"
+  isQuicksend: "0"
+  isTest: "1"
+  DOTNET_USE_POLLING_FILE_WATCHER: "1"
+imagePullSecrets:
+  enabled: true
+  createSecret: 
+    registry: registry.ants.co.th
+    username: admin
+    password: K1f8kmqOB7xO64nv1VR6z9h3F
+# ===========================================================================
+resources: {}
+
+volumes:
+  enabled: true
+  volume:
+    - name: sendsms-logs
+      hostPath:
+        path: /mnt/data/logs/dev-devcenter-sendsms-S04
+        type: DirectoryOrCreate
+  volumeMounts:
+    - name: sendsms-logs
+      mountPath: /app/logs/sendsms-container

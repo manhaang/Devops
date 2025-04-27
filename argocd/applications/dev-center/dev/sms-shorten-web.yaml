@@ -1,0 +1,34 @@
+kind: Deployment
+replicaCount: 1
+name: sms-shorten-web
+image:
+  repository: registry.ants.co.th/apps/sms/sms-shorten-web
+  tag: dev-bbe5a00997fce61a2a96cca10b57ca99e9317ca1
+  pullPolicy: IfNotPresent
+  commandEnabled: false
+# ===========================================================================
+service:
+  enabled: true
+  internalPort: 80
+  externalPort: 80
+appEnv:
+  SHORTEN: "Data Source=210.1.61.185,14430;Initial Catalog=SHORTEN;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'; TrustServerCertificate=True;"
+# ===========================================================================
+imagePullSecrets:
+  enabled: true
+  createSecret: 
+    registry: registry.ants.co.th
+    username: admin
+    password: K1f8kmqOB7xO64nv1VR6z9h3F
+# ===========================================================================
+resources: {}
+volumes:
+  enabled: true
+  volume:
+    - name: shorten-web-logs
+      hostPath:
+        path: /mnt/data/logs/dev-app-shorten-web
+        type: DirectoryOrCreate
+  volumeMounts:
+    - name: shorten-web-logs
+      mountPath: /app/logs/shorten-web-container

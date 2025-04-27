@@ -1,0 +1,76 @@
+kind: Deployment
+replicaCount: 1
+name: sms-batch-ftp-export
+image:
+  repository: registry.ants.co.th/apps/sms/sms-batch-ftp-export
+  tag: prod-8f5927bb6386712ee0c491f9e87741eed845b7ec
+  pullPolicy: IfNotPresent
+  commandEnabled: false
+# ===========================================================================
+service:
+  enabled: true
+  internalPort: 80
+  externalPort: 80
+appEnv: 
+  Interval: "3000"
+  batchname: "FTP Export"
+
+  EnvSelection: "hospital ants2 ants4 axa bmw ants1 promotech"
+  # EnvSelection: "ants1 ants2 ants4 axa bmw promotech hospital"
+
+  ants1_auth_newecm: "smsapi:P@ssw0rd"
+  ants1_ECM_ENDPOINT: "http://119.63.68.220:51010/api/file/getfile/"
+  ants1_smsDb: "Server='115.31.154.120,14430';Database='ANTSSMS';User Id='sa';Password='P@ssw0rd;';TrustServerCertificate=True;"
+  ants1_accountDb: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=ANTSACCOUNT;Data Source=103.212.181.33,14430"
+
+  ants2_auth_newecm: "smsapi:P@ssw0rd"
+  ants2_ECM_ENDPOINT: "http://119.63.68.220:51010/api/file/getfile/"
+  ants2_smsDb: "Server='115.31.154.120,14430';Database='ANTSSMS_ENV2';User Id='sa';Password='P@ssw0rd;';TrustServerCertificate=True;"
+  ants2_accountDb: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=ANTSACCOUNT;Data Source=103.212.181.33,14430"
+
+  ants4_auth_newecm: "smsapi:P@ssw0rd"
+  ants4_ECM_ENDPOINT: "http://119.63.68.220:51010/api/file/getfile/"
+  ants4_smsDb: "Server='115.31.154.120,14430';Database='ANTSSMS_ENV4';User Id='sa';Password='P@ssw0rd;';TrustServerCertificate=True;"
+  ants4_accountDb: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=ANTSACCOUNT;Data Source=103.212.181.33,14430"
+
+  axa_auth_newecm: "smsapi:P@ssw0rd"
+  axa_ECM_ENDPOINT: "http://119.63.68.220:51010/api/file/getfile/"
+  axa_smsDb: "Server='115.31.154.120,14430';Database='SMS_AXA';User Id='sa';Password='P@ssw0rd;';TrustServerCertificate=True;"
+  axa_accountDb: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=ANTSACCOUNT;Data Source=103.212.181.33,14430"
+
+  bmw_auth_newecm: "smsapi:P@ssw0rd"
+  bmw_ECM_ENDPOINT: "http://119.63.68.220:51010/api/file/getfile/"
+  bmw_smsDb: "Server='115.31.154.120,14430';Database='SMS_BMW';User Id='sa';Password='P@ssw0rd;';TrustServerCertificate=True;"
+  bmw_accountDb: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=ANTSACCOUNT;Data Source=103.212.181.33,14430"
+
+  promotech_auth_newecm: "smsapi:P@ssw0rd"
+  promotech_ECM_ENDPOINT: "http://119.63.68.220:51010/api/file/getfile/"
+  promotech_smsDb: "Server='115.31.154.120,14430';Database='ENV_PROMOTECH';User Id='sa';Password='P@ssw0rd;';TrustServerCertificate=True;"
+  promotech_accountDb: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=ANTSACCOUNT;Data Source=103.212.181.33,14430"
+
+  hospital_auth_newecm: "smsapi:P@ssw0rd"
+  hospital_ECM_ENDPOINT: "http://119.63.68.220:51010/api/file/getfile/"
+  hospital_smsDb: "Server='119.63.71.113,14430';Database='ANTSSMS_Hospital';User Id='sa';Password='P@ssw0rd;';TrustServerCertificate=True;"
+  hospital_accountDb: "Password='P@ssw0rd;';Persist Security Info=True;User ID=sa;Initial Catalog=ANTSACCOUNT;Data Source=103.212.181.33,14430"
+  closeLog: "0"
+  
+# ===========================================================================
+imagePullSecrets:
+  enabled: true
+  createSecret: 
+    registry: registry.ants.co.th
+    username: admin
+    password: K1f8kmqOB7xO64nv1VR6z9h3F
+# ===========================================================================
+resources: {}
+volumes:
+  enabled: true
+  volume:
+    - name: batch-ftp-export-logs
+      hostPath:
+        path: /mnt/data/logs/devcenter-batch-ftp-export
+        type: DirectoryOrCreate
+  volumeMounts:
+    - name: batch-ftp-export-logs
+      mountPath: /app/logs/batch-ftp-export-container
+

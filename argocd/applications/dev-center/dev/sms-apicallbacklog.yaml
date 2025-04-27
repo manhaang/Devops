@@ -1,0 +1,35 @@
+kind: Deployment
+replicaCount: 1
+name: sms-apicallbacklog
+image:
+  repository: registry.ants.co.th/apps/sms/sms-apicallbacklog
+  tag: dev-2bb4739af047160910110812ff61194ae44fa0dd
+  pullPolicy: IfNotPresent
+  commandEnabled: false
+# ===========================================================================
+service:
+  enabled: true
+  internalPort: 80
+  externalPort: 80
+appEnv: 
+  DOTNET_USE_POLLING_FILE_WATCHER: "1"
+  closeLog: "0"
+imagePullSecrets:
+  enabled: true
+  createSecret: 
+    registry: registry.ants.co.th
+    username: admin
+    password: K1f8kmqOB7xO64nv1VR6z9h3F
+# ===========================================================================
+resources: {}
+
+volumes:
+  enabled: true
+  volume:
+    - name: apicallbacklog-logs
+      hostPath:
+        path: /mnt/data/logs/dev-devcenter-apicallbacklog
+        type: DirectoryOrCreate
+  volumeMounts:
+    - name: apicallbacklog-logs
+      mountPath: /app/logs/apicallbacklog-container

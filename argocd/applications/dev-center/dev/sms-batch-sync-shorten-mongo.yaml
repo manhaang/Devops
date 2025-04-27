@@ -1,0 +1,52 @@
+kind: Deployment
+replicaCount: 1
+name: sms-batch-sync-shorten-mongo
+image:
+  repository: registry.ants.co.th/apps/sms/sms-batch-sync-shorten-mongo
+  tag: dev-8c3f6c0553cd4ffe4fef6676ae18d8709d791599
+  pullPolicy: IfNotPresent
+  commandEnabled: false
+# ===========================================================================
+service:
+  enabled: true
+  internalPort: 80
+  externalPort: 80
+appEnv: 
+  list-env: "ants1 axa"
+
+  # dev sql config
+  ants1-sql: "Data Source=210.1.61.185,14430;Initial Catalog=SHORTEN;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'"
+  # dev mongo config
+  ants1-mongodb-uri: "mongodb://210.1.61.187:37017"
+  ants1-mongo-database: "logdb"
+  ants1-mongo-collection: "shorten_log"
+
+  # axa sql config
+  axa-sql: "Data Source=210.1.61.185,14430;Initial Catalog=SHORTEN_AXA;Persist Security Info=True;User ID=sa;Password='P@ssw0rd;'"
+  # axa mongo config
+  axa-mongodb-uri: "mongodb://210.1.61.187:37017"
+  axa-mongo-database: "axa"
+  axa-mongo-collection: "shorten_log"
+
+  Interval: "3000"
+  closeLog: "0"
+  # ===========================================================================
+imagePullSecrets:
+  enabled: true
+  createSecret: 
+    registry: registry.ants.co.th
+    username: admin
+    password: K1f8kmqOB7xO64nv1VR6z9h3F
+# ===========================================================================
+resources: {}
+volumes:
+  enabled: true
+  volume:
+    - name: sms-batch-sync-shorten-mongo-logs
+      hostPath:
+        path: /mnt/data/logs/dev-devcenter-batch-sync-shorten-mongo
+        type: DirectoryOrCreate
+  volumeMounts:
+    - name: sms-batch-sync-shorten-mongo-logs
+      mountPath: /app/logs/batch-sync-shorten-mongo-container
+

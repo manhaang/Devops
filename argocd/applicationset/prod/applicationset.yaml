@@ -1,0 +1,94 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: dev-center-multi-org-applicationset
+  namespace: argocd
+spec:
+  generators:
+    - matrix:
+        generators:
+          - list:
+              elements:
+                - organization: dev-center
+          - list:
+              elements:
+                - app: gettoken
+                - app: public
+                - app: public-direct
+                - app: private
+                - app: api-analyst
+                - app: api-delete-redis
+                - app: import-excel
+                - app: import-schedule
+                - app: webs
+                - app: batch-update-callback
+                - app: batch-callback
+                - app: batch-delete-transaction-sms-dr
+                - app: publictoredis
+                - app: publictoredis-direct
+                - app: create-transaction-api
+                - app: otp
+                - app: apidr
+                - app: apidr-2
+                # - app: batch-report-commu
+                - app: batch-report-otp
+                - app: drredistomongotrue
+                - app: drredistomongotrue-2
+                - app: drredistomongodtac
+                - app: dr-center-create-transaction
+                - app: api-dr-dtac
+                # - app: batch-etl-commu-to-mongo
+                # - app: batch-etl-otp-to-mongo
+                # - app: batch-etl-shorten-to-mongo
+                - app: batch-import-person
+                # - app: batch-sync-shorten-to-mongo
+                - app: batchsend-mailalert
+                - app: batch-ftp-export
+                - app: batch-report-recurring
+                - app: downloadreport-web
+                - app: sendsms-true-2317451100
+                - app: sendsms-true-2317451101
+                - app: sendsms-true-2317451102
+                - app: sendsms-true-2317451104
+                - app: sendsms-true-2317451107
+                - app: sendsms-true-2317451111
+                - app: sendsms-true-2317451112
+                - app: sendsms-true-2317451108
+                - app: sendsms-true-2325131101
+                - app: sendsms-true-2325131102
+                - app: sendsms-true-2325131103
+                - app: sendsms-true-2325131105
+                - app: sendsms-true-2325131106
+                - app: sendsms-true-2325131107
+                - app: sendsms-true-2317451103
+                - app: sendsms-true-2325131104
+                - app: sendsms-true-2325131108
+                - app: apicallbacklog
+  template:
+    metadata:
+      name: "{{organization}}-{{app}}"
+      labels:
+        type: app
+        organization: "{{organization}}"
+    spec:
+      destination:
+        namespace: "{{organization}}"
+        server: https://kubernetes.default.svc
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+      createNamespace: true
+      source:
+        repoURL: https://dev.azure.com/AntsDevelop/sms-platform/_git/devops-automate-center
+        path: argocd/helmchart
+        targetRevision: main
+        helm:
+          releaseName: "{{organization}}-{{app}}"
+          valueFiles:
+            - "../applications/{{organization}}/prod/sms-{{app}}.yaml"
+      project: default
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
